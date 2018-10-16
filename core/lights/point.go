@@ -1,6 +1,6 @@
 package lights
 
-import "../math"
+import "github.com/tokkenno/seed/core/math"
 
 type Point struct {
 	Light

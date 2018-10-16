@@ -1,19 +1,20 @@
 package gl
 
 import (
-	"../../../core/cameras"
-	"../../../core/lights"
-	"../../../core/math"
 	"image/color"
 	"reflect"
+
+	"github.com/tokkenno/seed/core/cameras"
+	"github.com/tokkenno/seed/core/lights"
+	"github.com/tokkenno/seed/core/math"
 )
 
 type Uniform struct {
 	position         *math.Vector3
 	direction        *math.Vector3
-	color            color.Color
-	skyColor         color.Color
-	groundColor      color.Color
+	color            math.Color
+	skyColor         math.Color
+	groundColor      math.Color
 	distance         float64
 	coneCos          float64
 	penumbraCos      float64
@@ -91,11 +92,11 @@ func (cache *UniformsCache) Get(light *lights.Light) *Uniform {
 		case reflect.TypeOf(&lights.Light{}):
 		case reflect.TypeOf(&lights.Ambient{}):
 		default:
-			break;
+			break
 		}
 	}
 
-	return nil;
+	return nil
 }
 
 type LightState struct {

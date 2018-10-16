@@ -1,7 +1,7 @@
 package lights
 
 import (
-	"../math"
+	"github.com/tokkenno/seed/core/math"
 )
 
 type RectArea struct {

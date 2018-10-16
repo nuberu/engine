@@ -30,3 +30,6 @@ func (camera *Camera) UpdateMatrixWorld(force bool) {
 	camera.Object.UpdateMatrixWorld(force)
 	camera.matrixWorldInverse.GetInverse(camera.matrixWorld)
 }
+
+func (camera *Camera) GetMatrixWorldInverse() *math.Matrix4 {
+}

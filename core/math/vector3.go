@@ -32,3 +32,12 @@ func (v *Vector3) Set(x float64, y float64, z float64) *Vector3 {
 	v.Z = z
 	return v
 }
+
+
+
+func (vec *Vector3) Clone() *Vector3 {
+	return &Vector3{
+		Vector2: *vec.Vector2.Clone(),
+		Z: vec.Z,
+	}
+}

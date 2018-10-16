@@ -1,7 +1,7 @@
 package core
 
 import (
-	"./math"
+	"github.com/tokkenno/seed/core/math"
 )
 
 type Object struct {
@@ -49,13 +49,13 @@ func (obj *Object) UpdateMatrixWorld(force bool) {
 	if obj.matrixWorldNeedsUpdate || force {
 
 		if obj.Parent == nil {
-			obj.matrixWorld.Copy(obj.matrix);
+			obj.matrixWorld.Copy(obj.matrix)
 		} else {
-			obj.matrixWorld.multiplyMatrices(obj.Parent.matrixWorld, obj.matrix);
+			obj.matrixWorld.multiplyMatrices(obj.Parent.matrixWorld, obj.matrix)
 		}
 
-		obj.matrixWorldNeedsUpdate = false;
-		force = true;
+		obj.matrixWorldNeedsUpdate = false
+		force = true
 	}
 
 	// update children

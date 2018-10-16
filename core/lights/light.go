@@ -1,8 +1,8 @@
 package lights
 
 import (
-	"../../core"
-	"../math"
+	"github.com/tokkenno/seed/core"
+	"github.com/tokkenno/seed/core/math"
 )
 
 type Light struct {

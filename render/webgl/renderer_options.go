@@ -1,7 +1,7 @@
 package webgl
 
 import (
-	"./dom"
+	"github.com/tokkenno/seed/render/webgl/dom"
 )
 
 type RendererOptions struct {

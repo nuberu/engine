@@ -1,8 +1,8 @@
 package render
 
 import (
-	"../core"
-	"../core/cameras"
+	"github.com/tokkenno/seed/core"
+	"github.com/tokkenno/seed/core/cameras"
 )
 
 type Renderer interface {
