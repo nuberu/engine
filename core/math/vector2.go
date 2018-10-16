@@ -55,6 +55,11 @@ func (vec *Vector2) SetScalar(num float64) {
 	vec.Y = num
 }
 
+func (vec *Vector2) Copy(v *Vector2) {
+	vec.X = v.X
+	vec.Y = v.Y
+}
+
 func (vec *Vector2) Clone() *Vector2 {
 	return &Vector2{
 		X: vec.X,
@@ -197,7 +202,7 @@ func (vec *Vector2) Negate() {
 }
 
 func (vec *Vector2) Dot(v *Vector2) float64 {
-	return vec.X*v.X + vec.Y + v.Y
+	return vec.X*v.X + vec.Y*v.Y
 }
 
 func (vec *Vector2) Cross(v *Vector2) float64 {

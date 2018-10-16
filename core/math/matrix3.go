@@ -93,7 +93,7 @@ func (matrix *Matrix3) Determinant() float64 {
 		matrix.elements[2]*matrix.elements[4]*matrix.elements[6]
 }
 
-func (matrix *Matrix3) GetInverse(ma *Matrix3) {
+func (matrix *Matrix3) Inverse(ma *Matrix3) {
 
 }
 
@@ -127,7 +127,7 @@ func (matrix *Matrix3) SetTranspose(ma *Matrix3) {
 
 func (matrix *Matrix3) GetNormalMatrix(m4 *Matrix4) {
 	matrix.SetFromMatrix4(m4)
-	matrix.GetInverse(matrix)
+	matrix.Inverse(matrix)
 	matrix.Transpose()
 }
 
@@ -180,7 +180,6 @@ func (matrix *Matrix3) Translate(tx float64, ty float64) {
 	matrix.elements[4] += ty * matrix.elements[5]
 	matrix.elements[7] += ty * matrix.elements[8]
 }
-
 
 func (matrix *Matrix3) Equals(ma *Matrix3) bool {
 	for ind := range matrix.elements {
