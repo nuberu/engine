@@ -6,7 +6,7 @@ import (
 )
 
 type Light struct {
-	core.Object
+	core.Object3
 
 	color     *math.Color
 	intensity float32

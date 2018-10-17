@@ -4,11 +4,11 @@ import (
 	"github.com/tokkenno/seed/core/math"
 )
 
-type Object struct {
+type Object3 struct {
 	id       uint64
 	Name     string
-	Parent   *Object
-	children []*Object
+	Parent   *Object3
+	children []*Object3
 
 	position *math.Vector3
 	rotation *math.Vector3
@@ -21,27 +21,30 @@ type Object struct {
 	matrixWorldNeedsUpdate bool
 }
 
-func NewObject() *Object {
-	obj := new(Object)
+func NewObject() *Object3 {
+	obj := new(Object3)
 
 	obj.matrixAutoUpdate = true
 
 	return obj
 }
 
-func (obj *Object) GetId() uint64 {
+func (obj *Object3) GetId() uint64 {
 	return obj.id
 }
 
-func (obj *Object) Copy(source *Object, recursive bool) {
+/**
+ Recursive = TRUE by default
+ */
+func (obj *Object3) Copy(source *Object3, recursive bool) {
 
 }
 
-func (obj *Object) UpdateMatrix() {
+func (obj *Object3) UpdateMatrix() {
 
 }
 
-func (obj *Object) UpdateMatrixWorld(force bool) {
+func (obj *Object3) UpdateMatrixWorld(force bool) {
 	if obj.matrixAutoUpdate {
 		obj.UpdateMatrix()
 	}
@@ -51,7 +54,7 @@ func (obj *Object) UpdateMatrixWorld(force bool) {
 		if obj.Parent == nil {
 			obj.matrixWorld.Copy(obj.matrix)
 		} else {
-			obj.matrixWorld.multiplyMatrices(obj.Parent.matrixWorld, obj.matrix)
+			obj.matrixWorld.MultiplyMatrices(obj.Parent.matrixWorld, obj.matrix)
 		}
 
 		obj.matrixWorldNeedsUpdate = false
@@ -62,4 +65,8 @@ func (obj *Object) UpdateMatrixWorld(force bool) {
 	for _, child := range obj.children {
 		child.UpdateMatrixWorld(force)
 	}
+}
+
+func (obj *Object3) GetMatrixWorld() *math.Matrix4 {
+	return obj.matrixWorld
 }

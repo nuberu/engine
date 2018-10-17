@@ -1,7 +1,7 @@
 package core
 
 type Scene struct {
-	Object
+	Object3
 	AutoUpdateRender bool
 }
 
@@ -12,5 +12,5 @@ func NewScene() *Scene {
 }
 
 func (scene *Scene) Copy(source *Scene, recursive bool) {
-	scene.Object.Copy(&source.Object, recursive)
+	scene.Object3.Copy(&source.Object3, recursive)
 }
