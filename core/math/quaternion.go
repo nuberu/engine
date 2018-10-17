@@ -83,10 +83,10 @@ func (qua *Quaternion) SetW(w float64) {
 
 func (qua *Quaternion) Clone() *Quaternion {
 	return &Quaternion{
-		x:       qua.x,
-		y:       qua.y,
-		z:       qua.z,
-		w:       qua.w,
+		x: qua.x,
+		y: qua.y,
+		z: qua.z,
+		w: qua.w,
 	}
 }
 
@@ -109,50 +109,50 @@ func (qua *Quaternion) SetFromEuler(euler *Euler, update bool) {
 	z := euler.z
 	order := euler.order
 
-	c1 := math.Cos( x / 2 )
-	c2 := math.Cos( y / 2 )
-	c3 := math.Cos( z / 2 )
+	c1 := math.Cos(x / 2)
+	c2 := math.Cos(y / 2)
+	c3 := math.Cos(z / 2)
 
-	s1 := math.Cos( x / 2 )
-	s2 := math.Cos( y / 2 )
-	s3 := math.Cos( z / 2 )
+	s1 := math.Cos(x / 2)
+	s2 := math.Cos(y / 2)
+	s3 := math.Cos(z / 2)
 
 	switch order {
 	case EulerOrderXYZ:
-		qua.x = s1 * c2 * c3 + c1 * s2 * s3
-		qua.y = c1 * s2 * c3 - s1 * c2 * s3
-		qua.z = c1 * c2 * s3 + s1 * s2 * c3
-		qua.w = c1 * c2 * c3 - s1 * s2 * s3
+		qua.x = s1*c2*c3 + c1*s2*s3
+		qua.y = c1*s2*c3 - s1*c2*s3
+		qua.z = c1*c2*s3 + s1*s2*c3
+		qua.w = c1*c2*c3 - s1*s2*s3
 		break
 	case EulerOrderYXZ:
-		qua.x = s1 * c2 * c3 + c1 * s2 * s3
-		qua.y = c1 * s2 * c3 - s1 * c2 * s3
-		qua.z = c1 * c2 * s3 - s1 * s2 * c3
-		qua.w = c1 * c2 * c3 + s1 * s2 * s3
+		qua.x = s1*c2*c3 + c1*s2*s3
+		qua.y = c1*s2*c3 - s1*c2*s3
+		qua.z = c1*c2*s3 - s1*s2*c3
+		qua.w = c1*c2*c3 + s1*s2*s3
 		break
 	case EulerOrderZXY:
-		qua.x = s1 * c2 * c3 - c1 * s2 * s3
-		qua.y = c1 * s2 * c3 + s1 * c2 * s3
-		qua.z = c1 * c2 * s3 + s1 * s2 * c3
-		qua.w = c1 * c2 * c3 - s1 * s2 * s3
+		qua.x = s1*c2*c3 - c1*s2*s3
+		qua.y = c1*s2*c3 + s1*c2*s3
+		qua.z = c1*c2*s3 + s1*s2*c3
+		qua.w = c1*c2*c3 - s1*s2*s3
 		break
 	case EulerOrderZYX:
-		qua.x = s1 * c2 * c3 - c1 * s2 * s3
-		qua.y = c1 * s2 * c3 + s1 * c2 * s3
-		qua.z = c1 * c2 * s3 - s1 * s2 * c3
-		qua.w = c1 * c2 * c3 + s1 * s2 * s3
+		qua.x = s1*c2*c3 - c1*s2*s3
+		qua.y = c1*s2*c3 + s1*c2*s3
+		qua.z = c1*c2*s3 - s1*s2*c3
+		qua.w = c1*c2*c3 + s1*s2*s3
 		break
 	case EulerOrderYZX:
-		qua.x = s1 * c2 * c3 + c1 * s2 * s3
-		qua.y = c1 * s2 * c3 + s1 * c2 * s3
-		qua.z = c1 * c2 * s3 - s1 * s2 * c3
-		qua.w = c1 * c2 * c3 - s1 * s2 * s3
+		qua.x = s1*c2*c3 + c1*s2*s3
+		qua.y = c1*s2*c3 + s1*c2*s3
+		qua.z = c1*c2*s3 - s1*s2*c3
+		qua.w = c1*c2*c3 - s1*s2*s3
 		break
 	case EulerOrderXZY:
-		qua.x = s1 * c2 * c3 - c1 * s2 * s3
-		qua.y = c1 * s2 * c3 - s1 * c2 * s3
-		qua.z = c1 * c2 * s3 + s1 * s2 * c3
-		qua.w = c1 * c2 * c3 + s1 * s2 * s3
+		qua.x = s1*c2*c3 - c1*s2*s3
+		qua.y = c1*s2*c3 - s1*c2*s3
+		qua.z = c1*c2*s3 + s1*s2*c3
+		qua.w = c1*c2*c3 + s1*s2*s3
 		break
 	}
 
@@ -188,32 +188,32 @@ func (qua *Quaternion) SetFromRotationMatrix(m *Matrix4) {
 	var s float64
 
 	if trace > 0 {
-		s = 0.5 / math.Sqrt( trace + 1.0 )
+		s = 0.5 / math.Sqrt(trace+1.0)
 
 		qua.w = 0.25 / s
-		qua.x = ( m32 - m23 ) * s
-		qua.y = ( m13 - m31 ) * s
-		qua.z = ( m21 - m12 ) * s
+		qua.x = (m32 - m23) * s
+		qua.y = (m13 - m31) * s
+		qua.z = (m21 - m12) * s
 	} else if m11 > m22 && m11 > m33 {
-		s = 2.0 * math.Sqrt( 1.0 + m11 - m22 - m33 )
+		s = 2.0 * math.Sqrt(1.0+m11-m22-m33)
 
-		qua.w = ( m32 - m23 ) / s
+		qua.w = (m32 - m23) / s
 		qua.x = 0.25 * s
-		qua.y = ( m12 + m21 ) / s
-		qua.z = ( m13 + m31 ) / s
+		qua.y = (m12 + m21) / s
+		qua.z = (m13 + m31) / s
 	} else if m22 > m33 {
-		s = 2.0 * math.Sqrt( 1.0 + m22 - m11 - m33 )
+		s = 2.0 * math.Sqrt(1.0+m22-m11-m33)
 
-		qua.w = ( m13 - m31 ) / s
-		qua.x = ( m12 + m21 ) / s
+		qua.w = (m13 - m31) / s
+		qua.x = (m12 + m21) / s
 		qua.y = 0.25 * s
-		qua.z = ( m23 + m32 ) / s
+		qua.z = (m23 + m32) / s
 	} else {
-		s = 2.0 * math.Sqrt( 1.0 + m33 - m11 - m22 )
+		s = 2.0 * math.Sqrt(1.0+m33-m11-m22)
 
-		qua.w = ( m21 - m12 ) / s
-		qua.x = ( m13 + m31 ) / s
-		qua.y = ( m23 + m32 ) / s
+		qua.w = (m21 - m12) / s
+		qua.x = (m13 + m31) / s
+		qua.y = (m23 + m32) / s
 		qua.z = 0.25 * s
 	}
 
@@ -233,7 +233,7 @@ func (qua *Quaternion) SetFromUnitVectors(vFrom *Vector3, vTo *Vector3) {
 		if math.Abs(vFrom.X) > math.Abs(vFrom.Z) {
 			v1.Set(-vFrom.Y, vFrom.X, 0)
 		} else {
-			v1.Set( 0, -vFrom.Z, vFrom.Y)
+			v1.Set(0, -vFrom.Z, vFrom.Y)
 		}
 	} else {
 		v1.CrossVectors(vFrom, vTo)
@@ -253,8 +253,10 @@ func (qua *Quaternion) AngleTo(q *Quaternion) float64 {
 
 func (qua *Quaternion) RotateTowards(q *Quaternion, step float64) {
 	angle := qua.AngleTo(q)
-	if angle == 0 { return }
-	t := math.Min(1, step / angle)
+	if angle == 0 {
+		return
+	}
+	t := math.Min(1, step/angle)
 	qua.Slerp(q, t)
 }
 
@@ -271,11 +273,11 @@ func (qua *Quaternion) Conjugate() {
 }
 
 func (qua *Quaternion) Dot(v *Quaternion) float64 {
-	return qua.x * v.x + qua.y * v.y + qua.z * v.z + qua.w * v.w
+	return qua.x*v.x + qua.y*v.y + qua.z*v.z + qua.w*v.w
 }
 
 func (qua *Quaternion) GetLengthSq() float64 {
-	return qua.x * qua.x + qua.y * qua.y + qua.z * qua.z + qua.w * qua.w
+	return qua.x*qua.x + qua.y*qua.y + qua.z*qua.z + qua.w*qua.w
 }
 
 func (qua *Quaternion) GetLength() float64 {
@@ -311,10 +313,10 @@ func (qua *Quaternion) PreMultiply(q *Quaternion) {
 }
 
 func (qua *Quaternion) MultiplyQuaternions(a *Quaternion, b *Quaternion) {
-	qua.x = a.x * b.w + a.w * b.x + a.y * b.z - a.z * b.y
-	qua.y = a.y * b.w + a.w * b.y + a.z * b.x - a.x * b.z
-	qua.z = a.z * b.w + a.w * b.z + a.x * b.y - a.y * b.x
-	qua.w = a.w * b.w - a.x * b.x - a.y * b.y - a.z * b.z
+	qua.x = a.x*b.w + a.w*b.x + a.y*b.z - a.z*b.y
+	qua.y = a.y*b.w + a.w*b.y + a.z*b.x - a.x*b.z
+	qua.z = a.z*b.w + a.w*b.z + a.x*b.y - a.y*b.x
+	qua.w = a.w*b.w - a.x*b.x - a.y*b.y - a.z*b.z
 
 	qua.changeEvent.Emit(qua, nil)
 }
@@ -334,7 +336,7 @@ func (qua *Quaternion) Slerp(qb *Quaternion, t float64) {
 
 	// http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
 
-	var cosHalfTheta = w * qb.w + x * qb.x + y * qb.y + z * qb.z
+	var cosHalfTheta = w*qb.w + x*qb.x + y*qb.y + z*qb.z
 
 	if cosHalfTheta < 0 {
 		qua.w = - qb.w
@@ -356,27 +358,27 @@ func (qua *Quaternion) Slerp(qb *Quaternion, t float64) {
 		return
 	}
 
-	var sqrSinHalfTheta = 1.0 - cosHalfTheta * cosHalfTheta
+	var sqrSinHalfTheta = 1.0 - cosHalfTheta*cosHalfTheta
 
 	if sqrSinHalfTheta <= math.SmallestNonzeroFloat64 {
 		s := 1 - t
-		qua.w = s * w + t * qua.w
-		qua.x = s * x + t * qua.x
-		qua.y = s * y + t * qua.y
-		qua.z = s * z + t * qua.z
+		qua.w = s*w + t*qua.w
+		qua.x = s*x + t*qua.x
+		qua.y = s*y + t*qua.y
+		qua.z = s*z + t*qua.z
 		qua.Normalize()
 		return
 	}
 
 	sinHalfTheta := math.Sqrt(sqrSinHalfTheta)
 	halfTheta := math.Atan2(sinHalfTheta, cosHalfTheta)
-	ratioA := math.Sin((1 - t) * halfTheta) / sinHalfTheta
-	ratioB := math.Sin(t * halfTheta) / sinHalfTheta
+	ratioA := math.Sin((1-t)*halfTheta) / sinHalfTheta
+	ratioB := math.Sin(t*halfTheta) / sinHalfTheta
 
-	qua.w = w * ratioA + qua.w * ratioB
-	qua.x = x * ratioA + qua.x * ratioB
-	qua.y = y * ratioA + qua.y * ratioB
-	qua.z = z * ratioA + qua.z * ratioB
+	qua.w = w*ratioA + qua.w*ratioB
+	qua.x = x*ratioA + qua.x*ratioB
+	qua.y = y*ratioA + qua.y*ratioB
+	qua.z = z*ratioA + qua.z*ratioB
 
 	qua.changeEvent.Emit(qua, nil)
 }
@@ -398,43 +400,45 @@ func SlerpQuaternion(qa *Quaternion, qb *Quaternion, qm *Quaternion, t float64) 
  fuzz-free, array-based Quaternion SLERP operation
  */
 func SlerpFlatQuaternion(dst []float64, dstOffset int, src0 []float64, srcOffset0 int, src1 []float64, srcOffset1 int, t float64) {
-	x0 := src0[srcOffset0 + 0]
-	y0 := src0[srcOffset0 + 1]
-	z0 := src0[srcOffset0 + 2]
-	w0 := src0[srcOffset0 + 3]
+	x0 := src0[srcOffset0+0]
+	y0 := src0[srcOffset0+1]
+	z0 := src0[srcOffset0+2]
+	w0 := src0[srcOffset0+3]
 
-	x1 := src1[srcOffset1 + 0]
-	y1 := src1[srcOffset1 + 1]
-	z1 := src1[srcOffset1 + 2]
-	w1 := src1[srcOffset1 + 3]
+	x1 := src1[srcOffset1+0]
+	y1 := src1[srcOffset1+1]
+	z1 := src1[srcOffset1+2]
+	w1 := src1[srcOffset1+3]
 
 	if w0 != w1 || x0 != x1 || y0 != y1 || z0 != z1 {
 		s := 1 - t
-		cos := x0 * x1 + y0 * y1 + z0 * z1 + w0 * w1
+		cos := x0*x1 + y0*y1 + z0*z1 + w0*w1
 		dir := float64(1)
-		if cos < 0 { dir = -1 }
-		sqrSin := 1 - cos * cos
+		if cos < 0 {
+			dir = -1
+		}
+		sqrSin := 1 - cos*cos
 
 		// Skip the Slerp for tiny steps to avoid numeric problems:
 		if sqrSin > math.SmallestNonzeroFloat64 {
 			sin := math.Sqrt(sqrSin)
-			len := math.Atan2(sin, cos * dir)
+			len := math.Atan2(sin, cos*dir)
 
-			s = math.Sin(s * len) / sin
-			t = math.Sin(t * len) / sin
+			s = math.Sin(s*len) / sin
+			t = math.Sin(t*len) / sin
 		}
 
 		tDir := t * dir
 
-		x0 = x0 * s + x1 * tDir
-		y0 = y0 * s + y1 * tDir
-		z0 = z0 * s + z1 * tDir
-		w0 = w0 * s + w1 * tDir
+		x0 = x0*s + x1*tDir
+		y0 = y0*s + y1*tDir
+		z0 = z0*s + z1*tDir
+		w0 = w0*s + w1*tDir
 
 		// Normalize in case we just did a lerp:
-		if s == 1 - t {
+		if s == 1-t {
 
-			f := 1 / math.Sqrt( x0 * x0 + y0 * y0 + z0 * z0 + w0 * w0 )
+			f := 1 / math.Sqrt(x0*x0+y0*y0+z0*z0+w0*w0)
 
 			x0 *= f
 			y0 *= f
@@ -444,7 +448,7 @@ func SlerpFlatQuaternion(dst []float64, dstOffset int, src0 []float64, srcOffset
 	}
 
 	dst[dstOffset] = x0
-	dst[dstOffset + 1] = y0
-	dst[dstOffset + 2] = z0
-	dst[dstOffset + 3] = w0
+	dst[dstOffset+1] = y0
+	dst[dstOffset+2] = z0
+	dst[dstOffset+3] = w0
 }
