@@ -428,5 +428,6 @@ func (vec *Vector4) ToArray() [4]float64 {
 }
 
 func (vec *Vector4) CopyToArray(array []float64, offset int) {
-	copy(array[offset:], vec.ToArray()[:])
+	va := vec.ToArray()
+	copy(array[offset:], va[0:])
 }

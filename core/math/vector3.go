@@ -432,5 +432,6 @@ func (vec *Vector3) ToArray() [3]float64 {
 }
 
 func (vec *Vector3) CopyToArray(array []float64, offset int) {
-	copy(array[offset:], vec.ToArray()[:])
+	va := vec.ToArray()
+	copy(array[offset:], va[0:])
 }

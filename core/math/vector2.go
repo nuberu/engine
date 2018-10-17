@@ -293,5 +293,6 @@ func (vec *Vector2) ToArray() [2]float64 {
 }
 
 func (vec *Vector2) CopyToArray(array []float64, offset int) {
-	copy(array[offset:], vec.ToArray()[:])
+	va := vec.ToArray()
+	copy(array[offset:], va[0:])
 }
