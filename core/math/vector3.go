@@ -175,13 +175,13 @@ func (vec *Vector3) DivideScalar(num float64) {
 }
 
 func (vec *Vector3) ApplyEuler(euler *Euler) {
-	quaternion := NewEmptyQuaternion()
+	quaternion := NewDefaultQuaternion()
 	quaternion.SetFromEuler(euler, false)
 	vec.ApplyQuaternion(quaternion)
 }
 
 func (vec *Vector3) ApplyAxisAngle(axis *Vector3, angle float64) {
-	quaternion := NewEmptyQuaternion()
+	quaternion := NewDefaultQuaternion()
 	quaternion.SetFromAxisAngle(axis, angle)
 	vec.ApplyQuaternion(quaternion)
 }
@@ -340,6 +340,12 @@ func (vec *Vector3) Cross(v *Vector3) {
 	vec.X = ay*v.Z - az*v.Y
 	vec.Y = az*v.X - ax*v.Z
 	vec.Z = ax*v.Y - ay*v.X
+}
+
+func (vec *Vector3) CrossVectors(a *Vector3, b *Vector3) {
+	vec.X = a.Y*b.Z - a.Z*b.Y
+	vec.Y = a.Z*b.X - a.X*b.Z
+	vec.Z = a.X*b.Y - a.Y*b.X
 }
 
 func (vec *Vector3) GetLengthSq() float64 {
