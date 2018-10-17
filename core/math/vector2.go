@@ -7,6 +7,10 @@ type Vector2 struct {
 	Y float64
 }
 
+func NewDefaultVector2() *Vector2 {
+	return NewVector2(0, 0)
+}
+
 func NewVector2(x float64, y float64) *Vector2 {
 	return &Vector2{
 		X: x,
@@ -284,10 +288,10 @@ func (vec *Vector2) RotateAround(center *Vector2, angle float64) {
 	vec.Y = x*s + y*c + center.Y
 }
 
-func (vec *Vector2) ToArray() []float64 {
-	return []float64{vec.X, vec.Y}
+func (vec *Vector2) ToArray() [2]float64 {
+	return [2]float64{vec.X, vec.Y}
 }
 
 func (vec *Vector2) CopyToArray(array []float64, offset int) {
-	copy(array[offset:], vec.ToArray())
+	copy(array[offset:], vec.ToArray()[:])
 }

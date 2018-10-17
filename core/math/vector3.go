@@ -9,6 +9,10 @@ type Vector3 struct {
 	Z float64
 }
 
+func NewDefaultVector3() *Vector3 {
+	return NewVector3(0, 0, 0)
+}
+
 func NewVector3(x float64, y float64, z float64) *Vector3 {
 	return &Vector3{
 		Vector2: *NewVector2(x, y),
@@ -215,13 +219,13 @@ func (vec *Vector3) ApplyQuaternion(q *Quaternion) {
 	qz := q.GetZ()
 	qw := q.GetW()
 
-	// calculate quat * vector
+	// calculate quaternion * vector
 	ix := qw*x + qy*z - qz*y
 	iy := qw*y + qz*x - qx*z
 	iz := qw*z + qx*y - qy*x
 	iw := - qx*x - qy*y - qz*z
 
-	// calculate result * inverse quat
+	// calculate result * inverse quaternion
 	vec.X = ix*qw + iw*- qx + iy*- qz - iz*- qy
 	vec.Y = iy*qw + iw*- qy + iz*- qx - ix*- qz
 	vec.Z = iz*qw + iw*- qz + ix*- qy - iy*- qx
@@ -417,10 +421,10 @@ func (vec *Vector3) Equals(v *Vector3) bool {
 	return vec.X == v.X && vec.Y == v.Y && vec.Z == v.Z
 }
 
-func (vec *Vector3) ToArray() []float64 {
-	return []float64{vec.X, vec.Y, vec.Z}
+func (vec *Vector3) ToArray() [3]float64 {
+	return [3]float64{vec.X, vec.Y, vec.Z}
 }
 
 func (vec *Vector3) CopyToArray(array []float64, offset int) {
-	copy(array[offset:], vec.ToArray())
+	copy(array[offset:], vec.ToArray()[:])
 }
