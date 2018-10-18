@@ -1,19 +1,29 @@
 package math
 
-import "math"
+import (
+	"errors"
+	"fmt"
+	"github.com/google/logger"
+	"math"
+)
 
 type Matrix3 struct {
 	elements [9]float64
 }
 
-func Matrix3Identity() *Matrix3 {
-	return &Matrix3{
-		elements: [9]float64{
-			1, 0, 0,
-			0, 1, 0,
-			0, 0, 1,
-		},
+func NewDefaultMatrix3() *Matrix3 {
+	matrix := &Matrix3{
+		elements: [9]float64{0, 0, 0, 0, 0, 0, 0, 0, 0},
 	}
+	matrix.SetIdentity()
+	return matrix
+}
+
+func NewMatrix3(n11, n12, n13, n21, n22, n23, n31, n32, n33 float64) *Matrix3 {
+	matrix := &Matrix3{
+		elements: [9]float64{n11, n12, n13, n21, n22, n23, n31, n32, n33},
+	}
+	return matrix
 }
 
 func (matrix *Matrix3) GetElements() [9]float64 {
@@ -41,6 +51,14 @@ func (matrix *Matrix3) SetFromMatrix4(m *Matrix4) {
 	)
 }
 
+func (matrix *Matrix3) SetIdentity() {
+	matrix.elements = [9]float64{
+		1, 0, 0,
+		0, 1, 0,
+		0, 0, 1,
+	}
+}
+
 func (matrix *Matrix3) Clone() *Matrix3 {
 	m := Matrix3{
 		elements: [9]float64{},
@@ -49,7 +67,17 @@ func (matrix *Matrix3) Clone() *Matrix3 {
 	return &m
 }
 
+func (matrix *Matrix3) Copy(other *Matrix3) {
+	copy(matrix.elements[0:], other.elements[0:])
+}
+
+// TODO: func (matrix *Matrix3) ApplyToBufferAttribute(buffer)
+
 func (matrix *Matrix3) Multiply(m *Matrix3) {
+	matrix.MultiplyMatrices(matrix, m)
+}
+
+func (matrix *Matrix3) PreMultiply(m *Matrix3) {
 	matrix.MultiplyMatrices(m, matrix)
 }
 
@@ -93,8 +121,40 @@ func (matrix *Matrix3) Determinant() float64 {
 		matrix.elements[2]*matrix.elements[4]*matrix.elements[6]
 }
 
-func (matrix *Matrix3) Inverse(ma *Matrix3) {
+func (matrix *Matrix3) Inverse() error {
+	return matrix.SetInverse(matrix.Clone(), true)
+}
 
+func (matrix *Matrix3) SetInverse(ma *Matrix3, errorOnDegenerate bool) error {
+	t11 := ma.elements[8]*ma.elements[4] - ma.elements[5]*ma.elements[7]
+	t12 := ma.elements[5]*ma.elements[6] - ma.elements[8]*ma.elements[3]
+	t13 := ma.elements[7]*ma.elements[3] - ma.elements[4]*ma.elements[6]
+
+	det := ma.elements[0]*t11 + ma.elements[1]*t12 + ma.elements[2]*t13
+
+	if det == 0 {
+		if errorOnDegenerate == true {
+			return errors.New(".SetInverse() can't invert matrix, determinant is 0")
+		} else {
+			logger.Warning(".SetInverse() can't invert matrix, determinant is 0")
+			matrix.SetIdentity()
+			return nil
+		}
+	}
+
+	detInv := 1 / det
+
+	matrix.elements[0] = t11 * detInv
+	matrix.elements[1] = (ma.elements[2]*ma.elements[7] - ma.elements[8]*ma.elements[1]) * detInv
+	matrix.elements[2] = (ma.elements[5]*ma.elements[1] - ma.elements[2]*ma.elements[4]) * detInv
+	matrix.elements[3] = t12 * detInv
+	matrix.elements[4] = (ma.elements[8]*ma.elements[0] - ma.elements[2]*ma.elements[7]) * detInv
+	matrix.elements[5] = (ma.elements[2]*ma.elements[3] - ma.elements[5]*ma.elements[0]) * detInv
+	matrix.elements[6] = t13 * detInv
+	matrix.elements[7] = (ma.elements[1]*ma.elements[6] - ma.elements[7]*ma.elements[0]) * detInv
+	matrix.elements[8] = (ma.elements[4]*ma.elements[0] - ma.elements[1]*ma.elements[3]) * detInv
+
+	return nil
 }
 
 func (matrix *Matrix3) Transpose() {
@@ -127,7 +187,7 @@ func (matrix *Matrix3) SetTranspose(ma *Matrix3) {
 
 func (matrix *Matrix3) GetNormalMatrix(m4 *Matrix4) {
 	matrix.SetFromMatrix4(m4)
-	matrix.Inverse(matrix)
+	matrix.SetInverse(matrix, false)
 	matrix.Transpose()
 }
 
@@ -168,10 +228,6 @@ func (matrix *Matrix3) Rotate(rotation float64) {
 	matrix.elements[7] = cos*cpMatrix.elements[6] + sin*cpMatrix.elements[7]
 }
 
-func (matrix *Matrix3) TranslateVector2(v *Vector2) {
-	matrix.Translate(v.X, v.Y)
-}
-
 func (matrix *Matrix3) Translate(tx float64, ty float64) {
 	matrix.elements[0] += tx * matrix.elements[2]
 	matrix.elements[3] += tx * matrix.elements[5]
@@ -181,11 +237,42 @@ func (matrix *Matrix3) Translate(tx float64, ty float64) {
 	matrix.elements[7] += ty * matrix.elements[8]
 }
 
+func (matrix *Matrix3) TranslateVector2(v *Vector2) {
+	matrix.Translate(v.X, v.Y)
+}
+
 func (matrix *Matrix3) Equals(ma *Matrix3) bool {
 	for ind := range matrix.elements {
-		if matrix.elements[ind] != matrix.elements[ind] {
+		if matrix.elements[ind] != ma.elements[ind] {
 			return false
 		}
 	}
 	return true
+}
+
+func (matrix *Matrix3) EqualsRound(ma *Matrix3, decimals float64) bool {
+	mul := math.Pow(10, decimals)
+	for ind := range matrix.elements {
+		if math.Round(mul * matrix.elements[ind]) / mul != math.Round(mul * ma.elements[ind]) / mul {
+			return false
+		}
+	}
+	return true
+}
+
+func (matrix *Matrix3) ToArray() [9]float64 {
+	mc := matrix.Clone()
+	return mc.elements
+}
+
+func (matrix *Matrix3) CopyToArray(array []float64, offset int) {
+	va := matrix.ToArray()
+	copy(array[offset:], va[0:])
+}
+
+func (matrix *Matrix3) ToString() string {
+	return fmt.Sprintf("%9.2f %9.2f %9.2f\n%9.2f %9.2f %9.2f\n%9.2f %9.2f %9.2f",
+		matrix.elements[0], matrix.elements[1], matrix.elements[2],
+		matrix.elements[3], matrix.elements[4], matrix.elements[5],
+		matrix.elements[6], matrix.elements[7], matrix.elements[8])
 }

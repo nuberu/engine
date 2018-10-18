@@ -1,7 +1,7 @@
 package math
 
 import (
-	"github.com/tokkenno/seed/core/event"
+	"github.com/tokkenno/seed/event"
 	"math"
 )
 
