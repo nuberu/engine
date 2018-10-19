@@ -165,14 +165,14 @@ func (qua *Quaternion) SetFromEuler(euler *Euler, update bool) {
 	}
 }
 
-func (qua *Quaternion) SetFromAxisAngle(axis *Vector3, angle float64) {
+func (qua *Quaternion) SetFromAxisAngle(axis *Vector3, angle Angle) {
 	halfAngle := angle / 2
-	s := math.Sin(halfAngle)
+	s := math.Sin(float64(halfAngle))
 
 	qua.x = axis.X * s
 	qua.y = axis.Y * s
 	qua.z = axis.Z * s
-	qua.w = math.Cos(halfAngle)
+	qua.w = math.Cos(float64(halfAngle))
 
 	qua.changeEvent.Emit(qua, nil)
 }

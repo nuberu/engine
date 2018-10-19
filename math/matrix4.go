@@ -559,10 +559,11 @@ func (matrix *Matrix4) SetPosition(v *Vector3) {
 }
 
 func (matrix *Matrix4) Inverse() error {
-	return matrix.SetInverse(matrix.Clone(), true)
+	return matrix.GetInverse(matrix.Clone(), true)
 }
 
-func (matrix *Matrix4) SetInverse(m *Matrix4, errorOnDegenerate bool) error {
+// Get the inverse of the matrix [m] and set its value to the current matrix
+func (matrix *Matrix4) GetInverse(m *Matrix4, errorOnDegenerate bool) error {
 	t11 := m.elements[9 ]*m.elements[14]*m.elements[7 ] - m.elements[13]*m.elements[10]*m.elements[7 ] + m.elements[13]*m.elements[6 ]*m.elements[11] - m.elements[5 ]*m.elements[14]*m.elements[11] - m.elements[9 ]*m.elements[6 ]*m.elements[15] + m.elements[5 ]*m.elements[10]*m.elements[15]
 	t12 := m.elements[12]*m.elements[10]*m.elements[7 ] - m.elements[8 ]*m.elements[14]*m.elements[7 ] - m.elements[12]*m.elements[6 ]*m.elements[11] + m.elements[4 ]*m.elements[14]*m.elements[11] + m.elements[8 ]*m.elements[6 ]*m.elements[15] - m.elements[4 ]*m.elements[10]*m.elements[15]
 	t13 := m.elements[8 ]*m.elements[13]*m.elements[7 ] - m.elements[12]*m.elements[9 ]*m.elements[7 ] + m.elements[12]*m.elements[5 ]*m.elements[11] - m.elements[4 ]*m.elements[13]*m.elements[11] - m.elements[8 ]*m.elements[5 ]*m.elements[15] + m.elements[4 ]*m.elements[9 ]*m.elements[15]

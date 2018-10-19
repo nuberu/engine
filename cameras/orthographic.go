@@ -38,7 +38,7 @@ type Orthographic struct {
 	Camera
 
 	zoom float64
-	view *orthographicView
+	view orthographicView
 
 	left   float64
 	right  float64
@@ -46,6 +46,20 @@ type Orthographic struct {
 	bottom float64
 	near   float64
 	far    float64
+}
+
+func NewOrthographic(left, top, right, bottom float64, near, far float64) *Orthographic {
+	return &Orthographic{
+		Camera: *newCamera(),
+		zoom:   0.0,
+		view:   *newOrthographicView(),
+		left:   left,
+		right:  right,
+		top:    top,
+		bottom: bottom,
+		near:   near,
+		far:    far,
+	}
 }
 
 func (camera *Orthographic) Copy(source *Orthographic, recursive bool) {
@@ -59,14 +73,10 @@ func (camera *Orthographic) Copy(source *Orthographic, recursive bool) {
 	camera.far = source.far
 
 	camera.zoom = source.zoom
-	camera.view = source.view.Clone()
+	camera.view = *source.view.Clone()
 }
 
 func (camera *Orthographic) SetViewOffset(fullWidth, fullHeight, x, y, width, height float64) {
-	if camera.view == nil {
-		camera.view = newOrthographicView()
-	}
-
 	camera.view.enabled = true
 	camera.view.fullWidth = fullWidth
 	camera.view.fullHeight = fullHeight
@@ -79,10 +89,7 @@ func (camera *Orthographic) SetViewOffset(fullWidth, fullHeight, x, y, width, he
 }
 
 func (camera *Orthographic) ClearViewOffset() {
-	if camera.view != nil {
-		camera.view.enabled = false
-	}
-
+	camera.view.enabled = false
 	camera.UpdateProjectionMatrix()
 }
 
@@ -97,16 +104,16 @@ func (camera *Orthographic) UpdateProjectionMatrix() {
 	top := cy + dy
 	bottom := cy - dy
 
-	if camera.view != nil && camera.view.enabled {
+	if camera.view.enabled {
 
-		var zoomW = camera.zoom / (camera.view.width / camera.view.fullWidth);
-		var zoomH = camera.zoom / (camera.view.height / camera.view.fullHeight);
-		var scaleW = (camera.right - camera.left) / camera.view.width;
-		var scaleH = (camera.top - camera.bottom) / camera.view.height;
-		left += scaleW * (camera.view.offsetX / zoomW);
-		right = left + scaleW*(camera.view.width/zoomW);
-		top -= scaleH * (camera.view.offsetY / zoomH);
-		bottom = top - scaleH*(camera.view.height/zoomH);
+		var zoomW = camera.zoom / (camera.view.width / camera.view.fullWidth)
+		var zoomH = camera.zoom / (camera.view.height / camera.view.fullHeight)
+		var scaleW = (camera.right - camera.left) / camera.view.width
+		var scaleH = (camera.top - camera.bottom) / camera.view.height
+		left += scaleW * (camera.view.offsetX / zoomW)
+		right = left + scaleW*(camera.view.width/zoomW)
+		top -= scaleH * (camera.view.offsetY / zoomH)
+		bottom = top - scaleH*(camera.view.height/zoomH)
 	}
 
 	camera.GetProjectionMatrix().MakeOrthographic(left, right, top, bottom, camera.near, camera.far)
