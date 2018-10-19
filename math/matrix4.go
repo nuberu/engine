@@ -13,7 +13,12 @@ type Matrix4 struct {
 
 func NewDefaultMatrix4() *Matrix4 {
 	matrix := &Matrix4{
-		elements: [16]float64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+		elements: [16]float64{
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+			0, 0, 0, 0,
+		},
 	}
 	matrix.SetIdentity()
 	return matrix
@@ -21,13 +26,23 @@ func NewDefaultMatrix4() *Matrix4 {
 
 func NewMatrix4(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 float64) *Matrix4 {
 	return &Matrix4{
-		elements: [16]float64{n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44},
+		elements: [16]float64{
+			n11, n12, n13, n14,
+			n21, n22, n23, n24,
+			n31, n32, n33, n34,
+			n41, n42, n43, n44,
+		},
 	}
 }
 
 func NewMatrix4Translation(x float64, y float64, z float64) *Matrix4 {
 	return &Matrix4{
-		elements: [16]float64{1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1},
+		elements: [16]float64{
+			1, 0, 0, x,
+			0, 1, 0, y,
+			0, 0, 1, z,
+			0, 0, 0, 1,
+		},
 	}
 }
 
@@ -36,7 +51,12 @@ func NewMatrix4RotationX(theta float64) *Matrix4 {
 	s := math.Sin(theta)
 
 	return &Matrix4{
-		elements: [16]float64{1, 0, 0, 0, 0, c, -s, 0, 0, s, c, 0, 0, 0, 0, 1},
+		elements: [16]float64{
+			1, 0, 0, 0,
+			0, c, -s, 0,
+			0, s, c, 0,
+			0, 0, 0, 1,
+		},
 	}
 }
 
@@ -45,7 +65,12 @@ func NewMatrix4RotationY(theta float64) *Matrix4 {
 	s := math.Sin(theta)
 
 	return &Matrix4{
-		elements: [16]float64{c, 0, s, 0, 0, 1, 0, 0, -s, 0, c, 0, 0, 0, 0, 1},
+		elements: [16]float64{
+			c, 0, s, 0,
+			0, 1, 0, 0,
+			-s, 0, c, 0,
+			0, 0, 0, 1,
+		},
 	}
 }
 
@@ -54,7 +79,12 @@ func NewMatrix4RotationZ(theta float64) *Matrix4 {
 	s := math.Sin(theta)
 
 	return &Matrix4{
-		elements: [16]float64{c, -s, 0, 0, s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1},
+		elements: [16]float64{
+			c, -s, 0, 0,
+			s, c, 0, 0,
+			0, 0, 1, 0,
+			0, 0, 0, 1,
+		},
 	}
 }
 
@@ -97,14 +127,44 @@ func NewMatrix4Shear(x float64, y float64, z float64) *Matrix4 {
 	}
 }
 
+// TODO: Move to camera (check uses)
 func NewMatrix4Perspective(left, right, top, bottom, near, far float64) *Matrix4 {
-	// TODO: Port and move to camera (check uses)
-	return nil
+	x := 2 * near / (right - left)
+	y := 2 * near / (top - bottom)
+
+	a := (right + left) / (right - left)
+	b := (top + bottom) / (top - bottom)
+	c := -(far + near) / (far - near)
+	d := -2 * far * near / (far - near)
+
+	return &Matrix4{
+		elements: [16]float64{
+			x, 0, 0, 0,
+			0, y, 0, 0,
+			a, b, c, -1,
+			0, 0, d, 0,
+		},
+	}
 }
 
+// TODO: Move to camera (check uses)
 func NewMatrix4Orthographic(left, right, top, bottom, near, far float64) *Matrix4 {
-	// TODO: Port and move to camera (check uses)
-	return nil
+	w := 1.0 / (right - left)
+	h := 1.0 / (top - bottom)
+	p := 1.0 / (far - near)
+
+	x := (right + left) * w
+	y := (top + bottom) * h
+	z := (far + near) * p
+
+	return &Matrix4{
+		elements: [16]float64{
+			2 * w, 0, 0, 0,
+			0, 2 * h, 0, 0,
+			0, 0, -2 * p, 0,
+			-x, -y, -z, 1,
+		},
+	}
 }
 
 func NewMatrix4FromArray(arr []float64, offset int) *Matrix4 {
@@ -608,7 +668,43 @@ func (matrix *Matrix4) Compose(position *Vector3, q *Quaternion, scale *Vector3)
 }
 
 func (matrix *Matrix4) DeCompose(position *Vector3, q *Quaternion, scale *Vector3) {
-	// TODO
+	tmpVector := NewDefaultVector3()
+	tmpMatrix := matrix.Clone()
+
+	tmpVector.Set(matrix.elements[0 ], matrix.elements[1 ], matrix.elements[2 ])
+	scale.X = tmpVector.GetLength()
+	tmpVector.Set(matrix.elements[4 ], matrix.elements[5 ], matrix.elements[6 ])
+	scale.Y = tmpVector.GetLength()
+	tmpVector.Set(matrix.elements[8 ], matrix.elements[9 ], matrix.elements[10])
+	scale.Z = tmpVector.GetLength()
+
+	// if determine is negative, we need to invert one scale
+	if matrix.GetDeterminant() < 0 {
+		scale.X = -scale.X
+	}
+
+	position.X = matrix.elements[12]
+	position.Y = matrix.elements[13]
+	position.Z = matrix.elements[14]
+
+	// scale the rotation part
+	var invSX = 1 / scale.X
+	var invSY = 1 / scale.Y
+	var invSZ = 1 / scale.Z
+
+	tmpMatrix.elements[0 ] *= invSX
+	tmpMatrix.elements[1 ] *= invSX
+	tmpMatrix.elements[2 ] *= invSX
+
+	tmpMatrix.elements[4 ] *= invSY
+	tmpMatrix.elements[5 ] *= invSY
+	tmpMatrix.elements[6 ] *= invSY
+
+	tmpMatrix.elements[8 ] *= invSZ
+	tmpMatrix.elements[9 ] *= invSZ
+	tmpMatrix.elements[10] *= invSZ
+
+	q.SetFromRotationMatrix(tmpMatrix)
 }
 
 func (matrix *Matrix4) Equals(ma *Matrix4) bool {

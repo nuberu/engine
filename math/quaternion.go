@@ -37,6 +37,10 @@ func NewQuaternionFromArray(arr []float64, offset int) *Quaternion {
 	)
 }
 
+func (qua *Quaternion) OnChange() *event.Handler {
+	return qua.changeEvent.GetHandler()
+}
+
 func (qua *Quaternion) Set(x float64, y float64, z float64, w float64) {
 	qua.x = x
 	qua.y = y

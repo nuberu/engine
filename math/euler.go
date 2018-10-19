@@ -1,5 +1,7 @@
 package math
 
+import "github.com/tokkenno/seed/event"
+
 type EulerOrder int
 
 const (
@@ -17,15 +19,23 @@ type Euler struct {
 	y     float64
 	z     float64
 	order EulerOrder
+
+	changeEvent *event.Emitter
 }
 
-func NewEulerDefault() *Euler {
-	return &Euler{
+func (eu *Euler) OnChange() *event.Handler {
+	return eu.changeEvent.GetHandler()
+}
+
+func NewDefaultEuler() *Euler {
+	e := &Euler{
 		x:     0,
 		y:     0,
 		z:     0,
 		order: EulerOrderDefault,
+		changeEvent: event.NewEvent(),
 	}
+	return e
 }
 
 func NewEuler(x float64, y float64, z float64, order EulerOrder) *Euler {

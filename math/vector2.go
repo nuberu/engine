@@ -18,6 +18,13 @@ func NewVector2(x float64, y float64) *Vector2 {
 	}
 }
 
+func NewVector2Inf(sign int) *Vector2 {
+	return &Vector2{
+		X: math.Inf(sign),
+		Y: math.Inf(sign),
+	}
+}
+
 func NewVector2FromArray(arr []float64, offset int) *Vector2 {
 	return &Vector2{
 		X: arr[offset],

@@ -1,14 +1,18 @@
-package core
+package scenes
+
+import (
+	"github.com/tokkenno/seed/core"
+)
 
 type Scene struct {
-	Object3
+	core.Object3
 	AutoUpdateRender bool
 }
 
 func NewScene() *Scene {
 	scene := new(Scene)
 	scene.AutoUpdateRender = true
-	return scene;
+	return scene
 }
 
 func (scene *Scene) Copy(source *Scene, recursive bool) {
