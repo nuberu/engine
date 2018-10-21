@@ -2,12 +2,12 @@ package cameras
 
 type orthographicView struct {
 	enabled    bool
-	fullWidth  float64
-	fullHeight float64
-	offsetX    float64
-	offsetY    float64
-	width      float64
-	height     float64
+	fullWidth  float32
+	fullHeight float32
+	offsetX    float32
+	offsetY    float32
+	width      float32
+	height     float32
 }
 
 func newOrthographicView() *orthographicView {
@@ -37,18 +37,18 @@ func (ov *orthographicView) Clone() *orthographicView {
 type Orthographic struct {
 	Camera
 
-	zoom float64
+	zoom float32
 	view orthographicView
 
-	left   float64
-	right  float64
-	top    float64
-	bottom float64
-	near   float64
-	far    float64
+	left   float32
+	right  float32
+	top    float32
+	bottom float32
+	near   float32
+	far    float32
 }
 
-func NewOrthographic(left, top, right, bottom float64, near, far float64) *Orthographic {
+func NewOrthographic(left, top, right, bottom float32, near, far float32) *Orthographic {
 	return &Orthographic{
 		Camera: *newCamera(),
 		zoom:   0.0,
@@ -76,7 +76,7 @@ func (camera *Orthographic) Copy(source *Orthographic, recursive bool) {
 	camera.view = *source.view.Clone()
 }
 
-func (camera *Orthographic) SetViewOffset(fullWidth, fullHeight, x, y, width, height float64) {
+func (camera *Orthographic) SetViewOffset(fullWidth, fullHeight, x, y, width, height float32) {
 	camera.view.enabled = true
 	camera.view.fullWidth = fullWidth
 	camera.view.fullHeight = fullHeight

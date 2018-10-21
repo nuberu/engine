@@ -20,7 +20,7 @@ func NewBox2(min *Vector2, max *Vector2) *Box2 {
 	}
 }
 
-func NewBox2FromComponents(minX, minY, maxX, maxY float64) *Box2 {
+func NewBox2FromComponents(minX, minY, maxX, maxY float32) *Box2 {
 	return &Box2{
 		min: Vector2{X: minX, Y: minY},
 		max: Vector2{X: maxX, Y: maxY},
@@ -89,7 +89,7 @@ func (box *Box2) ExpandByVector(vector *Vector2) {
 	box.max.Add(vector)
 }
 
-func (box *Box2) ExpandByScalar(scalar float64) {
+func (box *Box2) ExpandByScalar(scalar float32) {
 	box.min.SubScalar(scalar)
 	box.max.AddScalar(scalar)
 }
@@ -115,7 +115,7 @@ func (box *Box2) ClampPoint(point *Vector2, target *Vector2) *Vector2 {
 	return target
 }
 
-func (box *Box2) DistanceToPoint(point *Vector2) float64 {
+func (box *Box2) DistanceToPoint(point *Vector2) float32 {
 	v1 := point.Clone()
 	v1.Clamp(&box.min, &box.max)
 	v1.Sub(point)

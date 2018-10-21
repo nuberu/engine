@@ -20,7 +20,7 @@ type CameraObject interface {
 type Object3 struct {
 	id                     Id
 	Name                   string
-	Parent                 *Object3
+	parent                 *Object3
 	children               []*Object3
 	up                     math.Vector3
 	Position               math.Vector3
@@ -42,13 +42,19 @@ type Object3 struct {
 
 	beforeRenderEvent *event.Emitter
 	afterRenderEvent  *event.Emitter
+	addEvent          *event.Emitter // Event fired when the object is added to other
+	removeEvent       *event.Emitter // Event fired when the object is removed from other
 }
 
 func NewObject() *Object3 {
+	return newObjectWithId(object3IdGenerator.Next())
+}
+
+func newObjectWithId(id Id) *Object3 {
 	obj := &Object3{
-		id:                     object3IdGenerator.Next(),
+		id:                     id,
 		Name:                   "",
-		Parent:                 nil,
+		parent:                 nil,
 		children:               []*Object3{},
 		up:                     *math.NewVector3(0, 1, 0),
 		Position:               math.Vector3{Vector2: math.Vector2{X: 0, Y: 0}, Z: 0},
@@ -70,6 +76,8 @@ func NewObject() *Object3 {
 
 		beforeRenderEvent: event.NewEvent(),
 		afterRenderEvent:  event.NewEvent(),
+		addEvent:          event.NewEvent(),
+		removeEvent:       event.NewEvent(),
 	}
 
 	obj.Rotation.OnChange().Always(obj.onEulerChange)
@@ -151,22 +159,22 @@ func (obj *Object3) RotateZ(angle math.Angle) {
 	obj.RotateOnAxis(math.NewVector3(0, 0, 1), angle)
 }
 
-func (obj *Object3) TranslateOnAxis(axis *math.Vector3, distance float64) {
+func (obj *Object3) TranslateOnAxis(axis *math.Vector3, distance float32) {
 	tmp := axis.Clone()
 	tmp.ApplyQuaternion(&obj.quaternion)
 	tmp.MultiplyScalar(distance)
 	obj.Position.Add(tmp)
 }
 
-func (obj *Object3) TranslateX(distance float64) {
+func (obj *Object3) TranslateX(distance float32) {
 	obj.TranslateOnAxis(math.NewVector3(1, 0, 0), distance)
 }
 
-func (obj *Object3) TranslateY(distance float64) {
+func (obj *Object3) TranslateY(distance float32) {
 	obj.TranslateOnAxis(math.NewVector3(0, 1, 0), distance)
 }
 
-func (obj *Object3) TranslateZ(distance float64) {
+func (obj *Object3) TranslateZ(distance float32) {
 	obj.TranslateOnAxis(math.NewVector3(0, 0, 1), distance)
 }
 
@@ -180,7 +188,7 @@ func (obj *Object3) WorldToLocal(vector *math.Vector3) {
 	vector.ApplyMatrix4(m1)
 }
 
-func (obj *Object3) LookAtComponents(x, y, z float64) {
+func (obj *Object3) LookAtComponents(x, y, z float32) {
 	obj.LookAt(math.NewVector3(x, y, z))
 }
 
@@ -202,8 +210,8 @@ func (obj *Object3) LookAt(x *math.Vector3) {
 
 	obj.quaternion.SetFromRotationMatrix(m1)
 
-	if obj.Parent != nil {
-		m1.ExtractRotation(&obj.Parent.matrixWorld)
+	if obj.parent != nil {
+		m1.ExtractRotation(&obj.parent.matrixWorld)
 		q1.SetFromRotationMatrix(m1)
 		q1.Inverse()
 		obj.quaternion.PreMultiply(q1)
@@ -211,14 +219,193 @@ func (obj *Object3) LookAt(x *math.Vector3) {
 }
 
 func (obj *Object3) Add(object *Object3) {
+	if object.parent != nil {
+		object.parent.Remove(object)
+	}
 
+	object.parent = obj
+	object.addEvent.Emit(obj, nil)
+
+	obj.children = append(obj.children, object)
 }
 
-/**
- Recursive = TRUE by default
- */
-func (obj *Object3) Copy(source *Object3, recursive bool) {
+func (obj *Object3) AddAll(objects []*Object3) {
+	for _, object := range objects {
+		obj.Add(object)
+	}
+}
 
+func (obj *Object3) Remove(object *Object3) {
+	for i, child := range obj.children {
+		if child == object {
+			object.parent = nil
+			object.removeEvent.Emit(obj, nil)
+			obj.children = append(obj.children[:i], obj.children[i+1:]...)
+		}
+	}
+}
+
+func (obj *Object3) RemoveAll(objects []*Object3) {
+	for _, object := range objects {
+		obj.Remove(object)
+	}
+}
+
+func (obj *Object3) GetChildrenById(id Id) *Object3 {
+	for _, child := range obj.children {
+		if child.id == id {
+			return child
+		} else {
+			return child.GetChildrenById(id)
+		}
+	}
+	return nil
+}
+
+func (obj *Object3) GetChildrenByName(name string) *Object3 {
+	for _, child := range obj.children {
+		if child.Name == name {
+			return child
+		} else {
+			return child.GetChildrenByName(name)
+		}
+	}
+	return nil
+}
+
+func (obj *Object3) GetWorldPosition() *math.Vector3 {
+	target := math.NewDefaultVector3()
+	obj.CopyWorldPosition(target)
+	return target
+}
+
+func (obj *Object3) CopyWorldPosition(target *math.Vector3) {
+	obj.UpdateMatrixWorld(true)
+	target.SetFromMatrixPosition(&obj.matrixWorld)
+}
+
+func (obj *Object3) GetWorldQuaternion() *math.Quaternion {
+	target := math.NewDefaultQuaternion()
+	obj.CopyWorldQuaternion(target)
+	return target
+}
+
+func (obj *Object3) CopyWorldQuaternion(target *math.Quaternion) {
+	position := math.NewDefaultVector3()
+	scale := math.NewDefaultVector3()
+
+	obj.UpdateMatrixWorld(true)
+
+	obj.matrixWorld.DeCompose(position, target, scale)
+}
+
+func (obj *Object3) GetWorldScale() *math.Vector3 {
+	target := math.NewDefaultVector3()
+	obj.CopyWorldScale(target)
+	return target
+}
+
+func (obj *Object3) CopyWorldScale(target *math.Vector3) {
+	position := math.NewDefaultVector3()
+	quaternion := math.NewDefaultQuaternion()
+
+	obj.UpdateMatrixWorld(true)
+
+	obj.matrixWorld.DeCompose(position, quaternion, target)
+}
+
+func (obj *Object3) GetWorldDirection() *math.Vector3 {
+	target := math.NewDefaultVector3()
+	obj.CopyWorldDirection(target)
+	return target
+}
+
+func (obj *Object3) CopyWorldDirection(target *math.Vector3) {
+	obj.UpdateMatrixWorld(true)
+	e := obj.matrixWorld.GetElements()
+	target.Set(e[8], e[9], e[10])
+	target.Normalize()
+}
+
+func (obj *Object3) TraverseIterator(onlyVisible bool) *object3Iterator {
+	return &object3Iterator{
+		current: -1,
+		data:    obj.allChildren(onlyVisible),
+	}
+}
+
+func (obj *Object3) allChildren(onlyVisible bool) []*Object3 {
+	var ch []*Object3
+
+	if onlyVisible {
+		ch := make([]*Object3, 0)
+		for _, child := range ch {
+			if child.Visible {
+				ch = append(ch, child)
+			}
+		}
+	} else {
+		ch := make([]*Object3, len(obj.children))
+		copy(ch, obj.children)
+	}
+
+	for _, child := range obj.children {
+		ch = append(ch, child.allChildren(onlyVisible)...)
+	}
+
+	return ch
+}
+
+func (obj *Object3) TraverseAncestorsIterator() *object3Iterator {
+	return &object3Iterator{
+		current: -1,
+		data:    obj.allParents(),
+	}
+}
+
+func (obj *Object3) allParents() []*Object3 {
+	if obj.parent == nil {
+		return []*Object3{}
+	} else {
+		return append(obj.parent.allParents(), obj.parent)
+	}
+}
+
+func (obj *Object3) Clone(recursive bool) *Object3 {
+	no := NewObject()
+	no.Copy(obj, recursive)
+	return no
+}
+
+// Recursive = TRUE by default
+func (obj *Object3) Copy(source *Object3, recursive bool) {
+	obj.Name = source.Name
+	obj.up = *source.up.Clone()
+
+	obj.Position = *source.Position.Clone()
+	obj.quaternion = *source.quaternion.Clone()
+	obj.Scale = *source.Scale.Clone()
+
+	obj.matrix = *source.matrix.Clone()
+	obj.matrixWorld = *source.matrixWorld.Clone()
+
+	obj.matrixAutoUpdate = source.matrixAutoUpdate
+	obj.matrixWorldNeedsUpdate = source.matrixWorldNeedsUpdate
+
+	obj.layers.mask = source.layers.mask
+	obj.Visible = source.Visible
+
+	obj.castShadow = source.castShadow
+	obj.receiveShadow = source.receiveShadow
+
+	obj.frustumCulled = source.frustumCulled
+	obj.RenderOrder = source.RenderOrder
+
+	if recursive {
+		for _, child := range source.children {
+			obj.Add(child.Clone(recursive))
+		}
+	}
 }
 
 func (obj *Object3) updateMatrix() {
@@ -233,10 +420,10 @@ func (obj *Object3) UpdateMatrixWorld(force bool) {
 
 	if obj.matrixWorldNeedsUpdate || force {
 
-		if obj.Parent == nil {
+		if obj.parent == nil {
 			obj.matrixWorld.Copy(&obj.matrix)
 		} else {
-			obj.matrixWorld.MultiplyMatrices(&obj.Parent.matrixWorld, &obj.matrix)
+			obj.matrixWorld.MultiplyMatrices(&obj.parent.matrixWorld, &obj.matrix)
 		}
 
 		obj.matrixWorldNeedsUpdate = false
@@ -250,18 +437,18 @@ func (obj *Object3) UpdateMatrixWorld(force bool) {
 }
 
 func (obj *Object3) updateWorldMatrix(updateParents, updateChildren bool) {
-	if updateParents == true && obj.Parent != nil {
-		obj.Parent.updateWorldMatrix(true, false)
+	if updateParents == true && obj.parent != nil {
+		obj.parent.updateWorldMatrix(true, false)
 	}
 
 	if obj.matrixAutoUpdate {
 		obj.updateMatrix()
 	}
 
-	if obj.Parent == nil {
+	if obj.parent == nil {
 		obj.matrixWorld.Copy(&obj.matrix)
 	} else {
-		obj.matrixWorld.MultiplyMatrices(&obj.Parent.matrixWorld, &obj.matrix)
+		obj.matrixWorld.MultiplyMatrices(&obj.parent.matrixWorld, &obj.matrix)
 	}
 
 	// update children
@@ -274,4 +461,21 @@ func (obj *Object3) updateWorldMatrix(updateParents, updateChildren bool) {
 
 func (obj *Object3) GetMatrixWorld() *math.Matrix4 {
 	return &obj.matrixWorld
+}
+
+type object3Iterator struct {
+	current int
+	data    []*Object3
+}
+
+func (it *object3Iterator) Value() *Object3 {
+	return it.data[it.current]
+}
+
+func (it *object3Iterator) Next() bool {
+	it.current++
+	if it.current >= len(it.data) {
+		return false
+	}
+	return true
 }

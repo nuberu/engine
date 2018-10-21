@@ -1,4 +1,4 @@
-package lights
+package core
 
 import (
 	"github.com/tokkenno/seed/core"

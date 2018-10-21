@@ -18,9 +18,9 @@ const (
 )
 
 type Euler struct {
-	x     float64
-	y     float64
-	z     float64
+	x     float32
+	y     float32
+	z     float32
 	order EulerOrder
 
 	changeEvent *event.Emitter
@@ -34,7 +34,7 @@ func NewDefaultEuler() *Euler {
 	return NewEuler(0, 0, 0, EulerOrderDefault)
 }
 
-func NewEuler(x float64, y float64, z float64, order EulerOrder) *Euler {
+func NewEuler(x float32, y float32, z float32, order EulerOrder) *Euler {
 	return &Euler{
 		x:           x,
 		y:           y,
@@ -44,7 +44,7 @@ func NewEuler(x float64, y float64, z float64, order EulerOrder) *Euler {
 	}
 }
 
-func NewEulerFromArray(arr []float64, offset int) *Euler {
+func NewEulerFromArray(arr []float32, offset int) *Euler {
 	return NewEuler(
 		arr[offset],
 		arr[offset+1],
@@ -53,33 +53,33 @@ func NewEulerFromArray(arr []float64, offset int) *Euler {
 	)
 }
 
-func (eu *Euler) GetX() float64 {
+func (eu *Euler) GetX() float32 {
 	return eu.x
 }
 
-func (eu *Euler) SetX(x float64) {
+func (eu *Euler) SetX(x float32) {
 	if eu.x != x {
 		eu.x = x
 		eu.changeEvent.Emit(eu, nil)
 	}
 }
 
-func (eu *Euler) GetY() float64 {
+func (eu *Euler) GetY() float32 {
 	return eu.y
 }
 
-func (eu *Euler) SetY(y float64) {
+func (eu *Euler) SetY(y float32) {
 	if eu.y != y {
 		eu.y = y
 		eu.changeEvent.Emit(eu, nil)
 	}
 }
 
-func (eu *Euler) GetZ() float64 {
+func (eu *Euler) GetZ() float32 {
 	return eu.z
 }
 
-func (eu *Euler) SetZ(z float64) {
+func (eu *Euler) SetZ(z float32) {
 	if eu.z != z {
 		eu.z = z
 		eu.changeEvent.Emit(eu, nil)
@@ -97,7 +97,7 @@ func (eu *Euler) SetOrder(order EulerOrder) {
 	}
 }
 
-func (eu *Euler) Set(x float64, y float64, z float64, order EulerOrder) {
+func (eu *Euler) Set(x float32, y float32, z float32, order EulerOrder) {
 	eu.x = x
 	eu.y = y
 	eu.z = z
@@ -210,8 +210,8 @@ func (eu *Euler) Equals(other *Euler) bool {
 	return eu.x == other.x && eu.y == other.y && eu.z == other.z && eu.order == other.order
 }
 
-func (eu *Euler) ToArray() [4]float64 {
-	return [4]float64{eu.x, eu.y, eu.z, float64(eu.order)}
+func (eu *Euler) ToArray() [4]float32 {
+	return [4]float32{eu.x, eu.y, eu.z, float32(eu.order)}
 }
 
 func (eu *Euler) ToVector3() *Vector3 {

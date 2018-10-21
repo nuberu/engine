@@ -8,29 +8,29 @@ import (
 )
 
 type Matrix3 struct {
-	elements [9]float64
+	elements [9]float32
 }
 
 func NewDefaultMatrix3() *Matrix3 {
 	matrix := &Matrix3{
-		elements: [9]float64{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		elements: [9]float32{0, 0, 0, 0, 0, 0, 0, 0, 0},
 	}
 	matrix.SetIdentity()
 	return matrix
 }
 
-func NewMatrix3(n11, n12, n13, n21, n22, n23, n31, n32, n33 float64) *Matrix3 {
+func NewMatrix3(n11, n12, n13, n21, n22, n23, n31, n32, n33 float32) *Matrix3 {
 	matrix := &Matrix3{
-		elements: [9]float64{n11, n12, n13, n21, n22, n23, n31, n32, n33},
+		elements: [9]float32{n11, n12, n13, n21, n22, n23, n31, n32, n33},
 	}
 	return matrix
 }
 
-func (matrix *Matrix3) GetElements() [9]float64 {
+func (matrix *Matrix3) GetElements() [9]float32 {
 	return matrix.elements
 }
 
-func (matrix *Matrix3) Set(n11, n12, n13, n21, n22, n23, n31, n32, n33 float64) {
+func (matrix *Matrix3) Set(n11, n12, n13, n21, n22, n23, n31, n32, n33 float32) {
 	matrix.elements[0] = n11
 	matrix.elements[1] = n12
 	matrix.elements[2] = n13
@@ -52,7 +52,7 @@ func (matrix *Matrix3) SetFromMatrix4(m *Matrix4) {
 }
 
 func (matrix *Matrix3) SetIdentity() {
-	matrix.elements = [9]float64{
+	matrix.elements = [9]float32{
 		1, 0, 0,
 		0, 1, 0,
 		0, 0, 1,
@@ -61,7 +61,7 @@ func (matrix *Matrix3) SetIdentity() {
 
 func (matrix *Matrix3) Clone() *Matrix3 {
 	m := Matrix3{
-		elements: [9]float64{},
+		elements: [9]float32{},
 	}
 	copy(m.elements[0:], matrix.elements[0:])
 	return &m
@@ -98,7 +98,7 @@ func (matrix *Matrix3) MultiplyMatrices(ma *Matrix3, mb *Matrix3) {
 	matrix.elements[8] = mae[2]*mbe[6] + mae[5]*mbe[7] + mae[8]*mbe[8]
 }
 
-func (matrix *Matrix3) MultiplyScalar(scalar float64) {
+func (matrix *Matrix3) MultiplyScalar(scalar float32) {
 	matrix.elements[0] *= scalar
 	matrix.elements[1] *= scalar
 	matrix.elements[2] *= scalar
@@ -112,7 +112,7 @@ func (matrix *Matrix3) MultiplyScalar(scalar float64) {
 	matrix.elements[8] *= scalar
 }
 
-func (matrix *Matrix3) Determinant() float64 {
+func (matrix *Matrix3) Determinant() float32 {
 	return matrix.elements[0]*matrix.elements[4]*matrix.elements[8] -
 		matrix.elements[0]*matrix.elements[5]*matrix.elements[7] -
 		matrix.elements[1]*matrix.elements[3]*matrix.elements[8] +
@@ -191,7 +191,7 @@ func (matrix *Matrix3) GetNormalMatrix(m4 *Matrix4) {
 	matrix.Transpose()
 }
 
-func (matrix *Matrix3) SetUvTransform(tx, ty, sx, sy, rotation, cx, cy float64) {
+func (matrix *Matrix3) SetUvTransform(tx, ty, sx, sy, rotation, cx, cy float32) {
 	cos := math.Cos(rotation)
 	sin := math.Sin(rotation)
 
@@ -202,7 +202,7 @@ func (matrix *Matrix3) SetUvTransform(tx, ty, sx, sy, rotation, cx, cy float64) 
 	)
 }
 
-func (matrix *Matrix3) Scale(sx float64, sy float64) {
+func (matrix *Matrix3) Scale(sx float32, sy float32) {
 	matrix.elements[0] *= sx
 	matrix.elements[1] *= sy
 
@@ -213,7 +213,7 @@ func (matrix *Matrix3) Scale(sx float64, sy float64) {
 	matrix.elements[7] *= sy
 }
 
-func (matrix *Matrix3) Rotate(rotation float64) {
+func (matrix *Matrix3) Rotate(rotation float32) {
 	cos := math.Cos(rotation)
 	sin := math.Sin(rotation)
 
@@ -228,7 +228,7 @@ func (matrix *Matrix3) Rotate(rotation float64) {
 	matrix.elements[7] = cos*cpMatrix.elements[6] + sin*cpMatrix.elements[7]
 }
 
-func (matrix *Matrix3) Translate(tx float64, ty float64) {
+func (matrix *Matrix3) Translate(tx float32, ty float32) {
 	matrix.elements[0] += tx * matrix.elements[2]
 	matrix.elements[3] += tx * matrix.elements[5]
 	matrix.elements[6] += tx * matrix.elements[8]
@@ -250,7 +250,7 @@ func (matrix *Matrix3) Equals(ma *Matrix3) bool {
 	return true
 }
 
-func (matrix *Matrix3) EqualsRound(ma *Matrix3, decimals float64) bool {
+func (matrix *Matrix3) EqualsRound(ma *Matrix3, decimals float32) bool {
 	mul := math.Pow(10, decimals)
 	for ind := range matrix.elements {
 		if math.Round(mul * matrix.elements[ind]) / mul != math.Round(mul * ma.elements[ind]) / mul {
@@ -260,12 +260,12 @@ func (matrix *Matrix3) EqualsRound(ma *Matrix3, decimals float64) bool {
 	return true
 }
 
-func (matrix *Matrix3) ToArray() [9]float64 {
+func (matrix *Matrix3) ToArray() [9]float32 {
 	mc := matrix.Clone()
 	return mc.elements
 }
 
-func (matrix *Matrix3) CopyToArray(array []float64, offset int) {
+func (matrix *Matrix3) CopyToArray(array []float32, offset int) {
 	va := matrix.ToArray()
 	copy(array[offset:], va[0:])
 }

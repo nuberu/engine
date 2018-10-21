@@ -4,21 +4,21 @@ import "math"
 
 type Vector4 struct {
 	Vector3
-	W float64
+	W float32
 }
 
 func NewDefaultVector4() *Vector4 {
 	return NewVector4(0, 0, 0, 1)
 }
 
-func NewVector4(x float64, y float64, z float64, w float64) *Vector4 {
+func NewVector4(x float32, y float32, z float32, w float32) *Vector4 {
 	return &Vector4{
 		Vector3: *NewVector3(x, y, z),
 		W:       w,
 	}
 }
 
-func NewVector4FromArray(arr []float64, offset int) *Vector4 {
+func NewVector4FromArray(arr []float32, offset int) *Vector4 {
 	return NewVector4(
 		arr[offset],
 		arr[offset+1],
@@ -27,18 +27,18 @@ func NewVector4FromArray(arr []float64, offset int) *Vector4 {
 	)
 }
 
-func (vec *Vector4) Set(x float64, y float64, z float64, w float64) {
+func (vec *Vector4) Set(x float32, y float32, z float32, w float32) {
 	vec.X = x
 	vec.Y = y
 	vec.Z = z
 	vec.W = w
 }
 
-func (vec *Vector4) SetW(w float64) {
+func (vec *Vector4) SetW(w float32) {
 	vec.W = w
 }
 
-func (vec *Vector4) SetScalar(scalar float64) {
+func (vec *Vector4) SetScalar(scalar float32) {
 	vec.X = scalar
 	vec.Y = scalar
 	vec.Z = scalar
@@ -66,14 +66,14 @@ func (vec *Vector4) Add(vector *Vector4) {
 	vec.W += vector.W
 }
 
-func (vec *Vector4) AddComponents(x float64, y float64, z float64, w float64) {
+func (vec *Vector4) AddComponents(x float32, y float32, z float32, w float32) {
 	vec.X += x
 	vec.Y += y
 	vec.Z += z
 	vec.W += w
 }
 
-func (vec *Vector4) AddScalar(num float64) {
+func (vec *Vector4) AddScalar(num float32) {
 	vec.X += num
 	vec.Y += num
 	vec.Z += num
@@ -87,7 +87,7 @@ func (vec *Vector4) SetAddVectors(v1 *Vector4, v2 *Vector4) {
 	vec.W = v1.W + v2.W
 }
 
-func (vec *Vector4) AddScaledVector(v1 *Vector4, scale float64) {
+func (vec *Vector4) AddScaledVector(v1 *Vector4, scale float32) {
 	vec.X += v1.X * scale
 	vec.Y += v1.Y * scale
 	vec.Z += v1.Z * scale
@@ -101,7 +101,7 @@ func (vec *Vector4) Sub(v *Vector4) {
 	vec.W -= v.W
 }
 
-func (vec *Vector4) SubScalar(num float64) {
+func (vec *Vector4) SubScalar(num float32) {
 	vec.X -= num
 	vec.Y -= num
 	vec.Z -= num
@@ -122,7 +122,7 @@ func (vec *Vector4) Multiply(v *Vector4) {
 	vec.W *= v.W
 }
 
-func (vec *Vector4) MultiplyScalar(num float64) {
+func (vec *Vector4) MultiplyScalar(num float32) {
 	vec.X *= num
 	vec.Y *= num
 	vec.Z *= num
@@ -136,7 +136,7 @@ func (vec *Vector4) Divide(v *Vector4) {
 	vec.W /= v.W
 }
 
-func (vec *Vector4) DivideScalar(num float64) {
+func (vec *Vector4) DivideScalar(num float32) {
 	vec.MultiplyScalar(1 / num)
 }
 
@@ -172,18 +172,18 @@ func (vec *Vector4) SetAxisAngleFromRotationMatrix(m *Matrix4) {
 	// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
 	// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
 
-	angle := float64(0)
+	angle := float32(0)
 
 	// variables for result
-	x := float64(0)
-	y := float64(0)
-	z := float64(0)
+	x := float32(0)
+	y := float32(0)
+	z := float32(0)
 
 	// margin to allow for rounding errors
-	epsilon := float64(0.01)
+	epsilon := float32(0.01)
 
 	// margin to distinguish between 0 and 180 degrees
-	epsilon2 := float64(0.1)
+	epsilon2 := float32(0.1)
 
 	m11 := m.elements[0]
 	m12 := m.elements[4]
@@ -305,13 +305,13 @@ func (vec *Vector4) Clamp(min *Vector4, max *Vector4) {
 	vec.W = math.Max(min.W, math.Min(max.W, vec.W))
 }
 
-func (vec *Vector4) ClampScalar(min float64, max float64) {
+func (vec *Vector4) ClampScalar(min float32, max float32) {
 	minVec := NewVector4(min, min, min, min)
 	maxVec := NewVector4(max, max, max, max)
 	vec.Clamp(minVec, maxVec)
 }
 
-func (vec *Vector4) ClampLength(min float64, max float64) {
+func (vec *Vector4) ClampLength(min float32, max float32) {
 	length := vec.GetLength()
 
 	div := length
@@ -377,24 +377,24 @@ func (vec *Vector4) Negate() {
 	vec.W = -vec.W
 }
 
-func (vec *Vector4) Dot(v *Vector4) float64 {
+func (vec *Vector4) Dot(v *Vector4) float32 {
 	return vec.X*v.X + vec.Y*v.Y + vec.Z*v.Z + vec.W*v.W
 }
 
-func (vec *Vector4) GetLengthSq() float64 {
+func (vec *Vector4) GetLengthSq() float32 {
 	return vec.X*vec.X + vec.Y*vec.Y + vec.Z*vec.Z + vec.W*vec.W
 }
 
-func (vec *Vector4) GetLength() float64 {
+func (vec *Vector4) GetLength() float32 {
 	return math.Sqrt(vec.GetLengthSq())
 }
 
-func (vec *Vector4) SetLength(length float64) {
+func (vec *Vector4) SetLength(length float32) {
 	vec.Normalize()
 	vec.MultiplyScalar(length)
 }
 
-func (vec *Vector4) GetManhattanLength() float64 {
+func (vec *Vector4) GetManhattanLength() float32 {
 	return math.Abs(vec.X) + math.Abs(vec.Y) + math.Abs(vec.Z) + math.Abs(vec.W)
 }
 
@@ -406,14 +406,14 @@ func (vec *Vector4) Normalize() {
 	vec.DivideScalar(div)
 }
 
-func (vec *Vector4) Lerp(v *Vector4, alpha float64) {
+func (vec *Vector4) Lerp(v *Vector4, alpha float32) {
 	vec.X += (v.X - vec.X) * alpha
 	vec.Y += (v.Y - vec.Y) * alpha
 	vec.Z += (v.Z - vec.Z) * alpha
 	vec.W += (v.W - vec.W) * alpha
 }
 
-func (vec *Vector4) LerpVectors(v1 *Vector4, v2 *Vector4, alpha float64) {
+func (vec *Vector4) LerpVectors(v1 *Vector4, v2 *Vector4, alpha float32) {
 	vec.SetSubVectors(v2, v1)
 	vec.MultiplyScalar(alpha)
 	vec.Add(v1)
@@ -423,11 +423,11 @@ func (vec *Vector4) Equals(v *Vector4) bool {
 	return vec.X == v.X && vec.Y == v.Y && vec.Z == v.Z && vec.W == v.W
 }
 
-func (vec *Vector4) ToArray() [4]float64 {
-	return [4]float64{vec.X, vec.Y, vec.Z, vec.W}
+func (vec *Vector4) ToArray() [4]float32 {
+	return [4]float32{vec.X, vec.Y, vec.Z, vec.W}
 }
 
-func (vec *Vector4) CopyToArray(array []float64, offset int) {
+func (vec *Vector4) CopyToArray(array []float32, offset int) {
 	va := vec.ToArray()
 	copy(array[offset:], va[0:])
 }

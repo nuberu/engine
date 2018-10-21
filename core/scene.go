@@ -1,11 +1,7 @@
-package scenes
-
-import (
-	"github.com/tokkenno/seed/core"
-)
+package core
 
 type Scene struct {
-	core.Object3
+	Object3
 	AutoUpdateRender bool
 }
 

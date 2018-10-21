@@ -19,5 +19,5 @@ func (col *Color) SetIntensity(intensity float32) *Color {
 }
 
 func (col *Color) GetRGBVector() *Vector3 {
-	return NewVector3(float64(col.R), float64(col.G), float64(col.B))
+	return NewVector3(float32(col.R), float32(col.G), float32(col.B))
 }

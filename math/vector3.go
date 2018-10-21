@@ -6,21 +6,21 @@ import (
 
 type Vector3 struct {
 	Vector2
-	Z float64
+	Z float32
 }
 
 func NewDefaultVector3() *Vector3 {
 	return NewVector3(0, 0, 0)
 }
 
-func NewVector3(x float64, y float64, z float64) *Vector3 {
+func NewVector3(x float32, y float32, z float32) *Vector3 {
 	return &Vector3{
 		Vector2: *NewVector2(x, y),
 		Z:       z,
 	}
 }
 
-func NewVector3FromArray(arr []float64, offset int) *Vector3 {
+func NewVector3FromArray(arr []float32, offset int) *Vector3 {
 	return NewVector3(
 		arr[offset],
 		arr[offset+1],
@@ -28,17 +28,17 @@ func NewVector3FromArray(arr []float64, offset int) *Vector3 {
 	)
 }
 
-func (vec *Vector3) Set(x float64, y float64, z float64) {
+func (vec *Vector3) Set(x float32, y float32, z float32) {
 	vec.X = x
 	vec.Y = y
 	vec.Z = z
 }
 
-func (vec *Vector3) SetZ(z float64) {
+func (vec *Vector3) SetZ(z float32) {
 	vec.Z = z
 }
 
-func (vec *Vector3) SetScalar(num float64) {
+func (vec *Vector3) SetScalar(num float32) {
 	vec.X = num
 	vec.Y = num
 	vec.Z = num
@@ -48,7 +48,7 @@ func (vec *Vector3) SetFromSpherical(s *Spherical) {
 	vec.SetFromSphericalCoordinates(s.radius, s.phi, s.theta)
 }
 
-func (vec *Vector3) SetFromSphericalCoordinates(radius float64, phi float64, theta float64) {
+func (vec *Vector3) SetFromSphericalCoordinates(radius float32, phi float32, theta float32) {
 	sinPhiRadius := math.Sin(phi) * radius
 	vec.X = sinPhiRadius * math.Sin(theta)
 	vec.Y = math.Cos(phi) * radius
@@ -59,7 +59,7 @@ func (vec *Vector3) SetFromCylindrical(c *Cylindrical) {
 	vec.SetFromCylindricalCoordinates(c.radius, c.theta, c.y)
 }
 
-func (vec *Vector3) SetFromCylindricalCoordinates(radius float64, theta float64, y float64) {
+func (vec *Vector3) SetFromCylindricalCoordinates(radius float32, theta float32, y float32) {
 	vec.X = radius * math.Sin(theta)
 	vec.Y = y
 	vec.Z = radius * math.Cos(theta)
@@ -110,13 +110,13 @@ func (vec *Vector3) Add(a *Vector3) {
 	vec.Z += a.Z
 }
 
-func (vec *Vector3) AddComponents(x float64, y float64, z float64) {
+func (vec *Vector3) AddComponents(x float32, y float32, z float32) {
 	vec.X += x
 	vec.Y += y
 	vec.Z += z
 }
 
-func (vec *Vector3) AddScalar(num float64) {
+func (vec *Vector3) AddScalar(num float32) {
 	vec.X += num
 	vec.Y += num
 	vec.Z += num
@@ -128,7 +128,7 @@ func (vec *Vector3) SetAddVectors(v1 *Vector3, v2 *Vector3) {
 	vec.Z = v1.Z + v2.Z
 }
 
-func (vec *Vector3) AddScaledVector(v1 *Vector3, scale float64) {
+func (vec *Vector3) AddScaledVector(v1 *Vector3, scale float32) {
 	vec.X += v1.X * scale
 	vec.Y += v1.Y * scale
 	vec.Z += v1.Z * scale
@@ -140,7 +140,7 @@ func (vec *Vector3) Sub(v *Vector3) {
 	vec.Z -= v.Z
 }
 
-func (vec *Vector3) SubScalar(num float64) {
+func (vec *Vector3) SubScalar(num float32) {
 	vec.X -= num
 	vec.Y -= num
 	vec.Z -= num
@@ -158,7 +158,7 @@ func (vec *Vector3) Multiply(v *Vector3) {
 	vec.Z *= v.Z
 }
 
-func (vec *Vector3) MultiplyScalar(num float64) {
+func (vec *Vector3) MultiplyScalar(num float32) {
 	vec.X *= num
 	vec.Y *= num
 	vec.Z *= num
@@ -170,7 +170,7 @@ func (vec *Vector3) Divide(v *Vector3) {
 	vec.Z /= v.Z
 }
 
-func (vec *Vector3) DivideScalar(num float64) {
+func (vec *Vector3) DivideScalar(num float32) {
 	vec.MultiplyScalar(1 / num)
 }
 
@@ -180,7 +180,7 @@ func (vec *Vector3) ApplyEuler(euler *Euler) {
 	vec.ApplyQuaternion(quaternion)
 }
 
-func (vec *Vector3) ApplyAxisAngle(axis *Vector3, angle float64) {
+func (vec *Vector3) ApplyAxisAngle(axis *Vector3, angle float32) {
 	quaternion := NewDefaultQuaternion()
 	quaternion.SetFromAxisAngle(axis, angle)
 	vec.ApplyQuaternion(quaternion)
@@ -266,13 +266,13 @@ func (vec *Vector3) Clamp(min *Vector3, max *Vector3) {
 	vec.Z = math.Max(min.Z, math.Min(max.Z, vec.Z))
 }
 
-func (vec *Vector3) ClampScalar(min float64, max float64) {
+func (vec *Vector3) ClampScalar(min float32, max float32) {
 	minVec := NewVector3(min, min, min)
 	maxVec := NewVector3(max, max, max)
 	vec.Clamp(minVec, maxVec)
 }
 
-func (vec *Vector3) ClampLength(min float64, max float64) {
+func (vec *Vector3) ClampLength(min float32, max float32) {
 	length := vec.GetLength()
 
 	div := length
@@ -328,7 +328,7 @@ func (vec *Vector3) Negate() {
 	vec.Z = -vec.Z
 }
 
-func (vec *Vector3) Dot(v *Vector3) float64 {
+func (vec *Vector3) Dot(v *Vector3) float32 {
 	return vec.X*v.X + vec.Y*v.Y + vec.Z*v.Z
 }
 
@@ -348,20 +348,20 @@ func (vec *Vector3) CrossVectors(a *Vector3, b *Vector3) {
 	vec.Z = a.X*b.Y - a.Y*b.X
 }
 
-func (vec *Vector3) GetLengthSq() float64 {
+func (vec *Vector3) GetLengthSq() float32 {
 	return vec.X*vec.X + vec.Y*vec.Y + vec.Z*vec.Z
 }
 
-func (vec *Vector3) GetLength() float64 {
+func (vec *Vector3) GetLength() float32 {
 	return math.Sqrt(vec.GetLengthSq())
 }
 
-func (vec *Vector3) SetLength(length float64) {
+func (vec *Vector3) SetLength(length float32) {
 	vec.Normalize()
 	vec.MultiplyScalar(length)
 }
 
-func (vec *Vector3) GetManhattanLength() float64 {
+func (vec *Vector3) GetManhattanLength() float32 {
 	return math.Abs(vec.X) + math.Abs(vec.Y) + math.Abs(vec.Z)
 }
 
@@ -391,33 +391,33 @@ func (vec *Vector3) Reflect(normal *Vector3) {
 	vec.Sub(v1)
 }
 
-func (vec *Vector3) AngleTo(v *Vector3) float64 {
+func (vec *Vector3) AngleTo(v *Vector3) float32 {
 	theta := vec.Dot(v) / (math.Sqrt(vec.GetLengthSq() * v.GetLengthSq()))
 	return math.Acos(Clamp(theta, -1, 1))
 }
 
-func (vec *Vector3) GetDistanceTo(v *Vector3) float64 {
+func (vec *Vector3) GetDistanceTo(v *Vector3) float32 {
 	return math.Sqrt(vec.GetDistanceToSquared(v))
 }
 
-func (vec *Vector3) GetDistanceToSquared(v *Vector3) float64 {
+func (vec *Vector3) GetDistanceToSquared(v *Vector3) float32 {
 	dx := vec.X - v.X
 	dy := vec.Y - v.Y
 	dz := vec.Z - v.Z
 	return dx*dx + dy*dy + dz*dz
 }
 
-func (vec *Vector3) GetManhattanDistanceTo(v *Vector3) float64 {
+func (vec *Vector3) GetManhattanDistanceTo(v *Vector3) float32 {
 	return math.Abs(vec.X-v.X) + math.Abs(vec.Y-v.Y) + math.Abs(vec.Z-v.Z)
 }
 
-func (vec *Vector3) Lerp(v *Vector3, alpha float64) {
+func (vec *Vector3) Lerp(v *Vector3, alpha float32) {
 	vec.X += (v.X - vec.X) * alpha
 	vec.Y += (v.Y - vec.Y) * alpha
 	vec.Z += (v.Z - vec.Z) * alpha
 }
 
-func (vec *Vector3) LerpVectors(v1 *Vector3, v2 *Vector3, alpha float64) {
+func (vec *Vector3) LerpVectors(v1 *Vector3, v2 *Vector3, alpha float32) {
 	vec.SetSubVectors(v2, v1)
 	vec.MultiplyScalar(alpha)
 	vec.Add(v1)
@@ -427,11 +427,11 @@ func (vec *Vector3) Equals(v *Vector3) bool {
 	return vec.X == v.X && vec.Y == v.Y && vec.Z == v.Z
 }
 
-func (vec *Vector3) ToArray() [3]float64 {
-	return [3]float64{vec.X, vec.Y, vec.Z}
+func (vec *Vector3) ToArray() [3]float32 {
+	return [3]float32{vec.X, vec.Y, vec.Z}
 }
 
-func (vec *Vector3) CopyToArray(array []float64, offset int) {
+func (vec *Vector3) CopyToArray(array []float32, offset int) {
 	va := vec.ToArray()
 	copy(array[offset:], va[0:])
 }

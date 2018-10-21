@@ -8,14 +8,14 @@ var (
 	namedExample    *Matrix4
 	mixedExample    *Matrix4
 	mixedExampleInv *Matrix4
-	mixedExampleDet float64
+	mixedExampleDet float32
 )
 
 func init() {
 	namedExample = NewMatrix4(11, 12, 13, 14, 21, 22, 23, 24, 31, 32, 33, 34, 41, 42, 43, 44)
 	mixedExample = NewMatrix4(1, 2, 3, 4, 5, -6, -7, 8, -9, 10, 11, -12, -13, -14, -15, -16)
-	mixedExampleInv = NewMatrix4(float64(-2)/float64(9), float64(-1)/float64(2), float64(-1)/float64(3), float64(-1)/float64(18), float64(-5)/float64(8), float64(11)/float64(8), float64(7)/float64(8), float64(-1)/float64(8), float64(7)/float64(12), float64(-5)/float64(4), float64(-3)/float64(4), float64(1)/float64(12), float64(13)/float64(72), float64(3)/float64(8), float64(5)/float64(24), float64(1)/float64(72))
-	mixedExampleDet = float64(576)
+	mixedExampleInv = NewMatrix4(float32(-2)/float32(9), float32(-1)/float32(2), float32(-1)/float32(3), float32(-1)/float32(18), float32(-5)/float32(8), float32(11)/float32(8), float32(7)/float32(8), float32(-1)/float32(8), float32(7)/float32(12), float32(-5)/float32(4), float32(-3)/float32(4), float32(1)/float32(12), float32(13)/float32(72), float32(3)/float32(8), float32(5)/float32(24), float32(1)/float32(72))
+	mixedExampleDet = float32(576)
 }
 
 func TestMatrix4_CopyPosition(t *testing.T) {

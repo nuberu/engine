@@ -8,12 +8,12 @@ import (
 )
 
 type Matrix4 struct {
-	elements [16]float64
+	elements [16]float32
 }
 
 func NewDefaultMatrix4() *Matrix4 {
 	matrix := &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			0, 0, 0, 0,
 			0, 0, 0, 0,
 			0, 0, 0, 0,
@@ -24,9 +24,9 @@ func NewDefaultMatrix4() *Matrix4 {
 	return matrix
 }
 
-func NewMatrix4(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 float64) *Matrix4 {
+func NewMatrix4(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 float32) *Matrix4 {
 	return &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			n11, n12, n13, n14,
 			n21, n22, n23, n24,
 			n31, n32, n33, n34,
@@ -35,9 +35,9 @@ func NewMatrix4(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41,
 	}
 }
 
-func NewMatrix4Translation(x float64, y float64, z float64) *Matrix4 {
+func NewMatrix4Translation(x float32, y float32, z float32) *Matrix4 {
 	return &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			1, 0, 0, x,
 			0, 1, 0, y,
 			0, 0, 1, z,
@@ -46,12 +46,12 @@ func NewMatrix4Translation(x float64, y float64, z float64) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationX(theta float64) *Matrix4 {
+func NewMatrix4RotationX(theta float32) *Matrix4 {
 	c := math.Cos(theta)
 	s := math.Sin(theta)
 
 	return &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			1, 0, 0, 0,
 			0, c, -s, 0,
 			0, s, c, 0,
@@ -60,12 +60,12 @@ func NewMatrix4RotationX(theta float64) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationY(theta float64) *Matrix4 {
+func NewMatrix4RotationY(theta float32) *Matrix4 {
 	c := math.Cos(theta)
 	s := math.Sin(theta)
 
 	return &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			c, 0, s, 0,
 			0, 1, 0, 0,
 			-s, 0, c, 0,
@@ -74,12 +74,12 @@ func NewMatrix4RotationY(theta float64) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationZ(theta float64) *Matrix4 {
+func NewMatrix4RotationZ(theta float32) *Matrix4 {
 	c := math.Cos(theta)
 	s := math.Sin(theta)
 
 	return &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			c, -s, 0, 0,
 			s, c, 0, 0,
 			0, 0, 1, 0,
@@ -88,7 +88,7 @@ func NewMatrix4RotationZ(theta float64) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationAxis(axis *Vector3, angle float64) *Matrix4 {
+func NewMatrix4RotationAxis(axis *Vector3, angle float32) *Matrix4 {
 	c := math.Cos(angle)
 	s := math.Sin(angle)
 	t := 1 - c
@@ -96,7 +96,7 @@ func NewMatrix4RotationAxis(axis *Vector3, angle float64) *Matrix4 {
 	ty := t * axis.Y
 
 	return &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			tx*axis.X + c, tx*axis.Y - s*axis.Z, tx*axis.Z + s*axis.Y, 0,
 			tx*axis.Y + s*axis.Z, ty*axis.Y + c, ty*axis.Z - s*axis.X, 0,
 			tx*axis.Z - s*axis.Y, ty*axis.Z + s*axis.X, t*axis.Z*axis.Z + c, 0,
@@ -105,9 +105,9 @@ func NewMatrix4RotationAxis(axis *Vector3, angle float64) *Matrix4 {
 	}
 }
 
-func NewMatrix4Scale(x float64, y float64, z float64) *Matrix4 {
+func NewMatrix4Scale(x float32, y float32, z float32) *Matrix4 {
 	return &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			x, 0, 0, 0,
 			0, y, 0, 0,
 			0, 0, z, 0,
@@ -116,9 +116,9 @@ func NewMatrix4Scale(x float64, y float64, z float64) *Matrix4 {
 	}
 }
 
-func NewMatrix4Shear(x float64, y float64, z float64) *Matrix4 {
+func NewMatrix4Shear(x float32, y float32, z float32) *Matrix4 {
 	return &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			1, y, z, 0,
 			x, 1, z, 0,
 			x, y, 1, 0,
@@ -128,7 +128,7 @@ func NewMatrix4Shear(x float64, y float64, z float64) *Matrix4 {
 }
 
 // TODO: Move to camera (check uses)
-func NewMatrix4Perspective(left, right, top, bottom, near, far float64) *Matrix4 {
+func NewMatrix4Perspective(left, right, top, bottom, near, far float32) *Matrix4 {
 	x := 2 * near / (right - left)
 	y := 2 * near / (top - bottom)
 
@@ -138,7 +138,7 @@ func NewMatrix4Perspective(left, right, top, bottom, near, far float64) *Matrix4
 	d := -2 * far * near / (far - near)
 
 	return &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			x, 0, 0, 0,
 			0, y, 0, 0,
 			a, b, c, -1,
@@ -148,7 +148,7 @@ func NewMatrix4Perspective(left, right, top, bottom, near, far float64) *Matrix4
 }
 
 // TODO: Move to camera (check uses)
-func NewMatrix4Orthographic(left, right, top, bottom, near, far float64) *Matrix4 {
+func NewMatrix4Orthographic(left, right, top, bottom, near, far float32) *Matrix4 {
 	w := 1.0 / (right - left)
 	h := 1.0 / (top - bottom)
 	p := 1.0 / (far - near)
@@ -158,7 +158,7 @@ func NewMatrix4Orthographic(left, right, top, bottom, near, far float64) *Matrix
 	z := (far + near) * p
 
 	return &Matrix4{
-		elements: [16]float64{
+		elements: [16]float32{
 			2 * w, 0, 0, 0,
 			0, 2 * h, 0, 0,
 			0, 0, -2 * p, 0,
@@ -167,7 +167,7 @@ func NewMatrix4Orthographic(left, right, top, bottom, near, far float64) *Matrix
 	}
 }
 
-func NewMatrix4FromArray(arr []float64, offset int) *Matrix4 {
+func NewMatrix4FromArray(arr []float32, offset int) *Matrix4 {
 	return NewMatrix4(
 		arr[offset], arr[offset+1], arr[offset+2], arr[offset+3],
 		arr[offset+4], arr[offset+5], arr[offset+6], arr[offset+7],
@@ -176,11 +176,11 @@ func NewMatrix4FromArray(arr []float64, offset int) *Matrix4 {
 	)
 }
 
-func (matrix *Matrix4) GetElements() [16]float64 {
+func (matrix *Matrix4) GetElements() [16]float32 {
 	return matrix.elements
 }
 
-func (matrix *Matrix4) Set(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 float64) {
+func (matrix *Matrix4) Set(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33, n34, n41, n42, n43, n44 float32) {
 	matrix.elements[0] = n11
 	matrix.elements[1] = n12
 	matrix.elements[2] = n13
@@ -200,7 +200,7 @@ func (matrix *Matrix4) Set(n11, n12, n13, n14, n21, n22, n23, n24, n31, n32, n33
 }
 
 func (matrix *Matrix4) SetIdentity() {
-	matrix.elements = [16]float64{
+	matrix.elements = [16]float32{
 		1, 0, 0, 0,
 		0, 1, 0, 0,
 		0, 0, 1, 0,
@@ -210,7 +210,7 @@ func (matrix *Matrix4) SetIdentity() {
 
 func (matrix *Matrix4) Clone() *Matrix4 {
 	m := Matrix4{
-		elements: [16]float64{},
+		elements: [16]float32{},
 	}
 	copy(m.elements[0:], matrix.elements[0:])
 	return &m
@@ -477,7 +477,7 @@ func (matrix *Matrix4) MultiplyMatrices(a *Matrix4, b *Matrix4) {
 	matrix.elements[15] = a.elements[3 ]*b.elements[12] + a.elements[7 ]*b.elements[13] + a.elements[11]*b.elements[14] + a.elements[15]*b.elements[15]
 }
 
-func (matrix *Matrix4) MultiplyScalar(s float64) {
+func (matrix *Matrix4) MultiplyScalar(s float32) {
 	matrix.elements[0 ] *= s
 	matrix.elements[4 ] *= s
 	matrix.elements[8 ] *= s
@@ -499,7 +499,7 @@ func (matrix *Matrix4) MultiplyScalar(s float64) {
 	matrix.elements[15] *= s
 }
 
-func (matrix *Matrix4) GetDeterminant() float64 {
+func (matrix *Matrix4) GetDeterminant() float32 {
 	return matrix.elements[3 ]*(
 		matrix.elements[12]*matrix.elements[9 ]*matrix.elements[6 ] -
 			matrix.elements[8 ]*matrix.elements[13]*matrix.elements[6 ] -
@@ -621,7 +621,7 @@ func (matrix *Matrix4) Scale(scale *Vector3) {
 	matrix.elements[11] *= scale.Z
 }
 
-func (matrix *Matrix4) GetMaxScaleOnAxis() float64 {
+func (matrix *Matrix4) GetMaxScaleOnAxis() float32 {
 	scaleXSq := matrix.elements[0 ]*matrix.elements[0 ] + matrix.elements[1 ]*matrix.elements[1 ] + matrix.elements[2 ]*matrix.elements[2 ]
 	scaleYSq := matrix.elements[4 ]*matrix.elements[4 ] + matrix.elements[5 ]*matrix.elements[5 ] + matrix.elements[6 ]*matrix.elements[6 ]
 	scaleZSq := matrix.elements[8 ]*matrix.elements[8 ] + matrix.elements[9 ]*matrix.elements[9 ] + matrix.elements[10]*matrix.elements[10]
@@ -717,7 +717,7 @@ func (matrix *Matrix4) Equals(ma *Matrix4) bool {
 	return true
 }
 
-func (matrix *Matrix4) EqualsRound(ma *Matrix4, decimals float64) bool {
+func (matrix *Matrix4) EqualsRound(ma *Matrix4, decimals float32) bool {
 	mul := math.Pow(10, decimals)
 	for ind := range matrix.elements {
 		if math.Round(mul*matrix.elements[ind])/mul != math.Round(mul*ma.elements[ind])/mul {
@@ -735,6 +735,6 @@ func (matrix *Matrix4) ToString() string {
 		matrix.elements[12], matrix.elements[13], matrix.elements[14], matrix.elements[15])
 }
 
-func (matrix *Matrix4) ToArray() [16]float64 {
+func (matrix *Matrix4) ToArray() [16]float32 {
 	return matrix.Clone().elements
 }

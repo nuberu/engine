@@ -6,10 +6,10 @@ import (
 )
 
 type Quaternion struct {
-	x float64
-	y float64
-	z float64
-	w float64
+	x float32
+	y float32
+	z float32
+	w float32
 
 	changeEvent *event.Emitter
 }
@@ -18,7 +18,7 @@ func NewDefaultQuaternion() *Quaternion {
 	return NewQuaternion(0, 0, 0, 1)
 }
 
-func NewQuaternion(x float64, y float64, z float64, w float64) *Quaternion {
+func NewQuaternion(x float32, y float32, z float32, w float32) *Quaternion {
 	return &Quaternion{
 		x:           x,
 		y:           y,
@@ -28,7 +28,7 @@ func NewQuaternion(x float64, y float64, z float64, w float64) *Quaternion {
 	}
 }
 
-func NewQuaternionFromArray(arr []float64, offset int) *Quaternion {
+func NewQuaternionFromArray(arr []float32, offset int) *Quaternion {
 	return NewQuaternion(
 		arr[offset],
 		arr[offset+1],
@@ -41,7 +41,7 @@ func (qua *Quaternion) OnChange() *event.Handler {
 	return qua.changeEvent.GetHandler()
 }
 
-func (qua *Quaternion) Set(x float64, y float64, z float64, w float64) {
+func (qua *Quaternion) Set(x float32, y float32, z float32, w float32) {
 	qua.x = x
 	qua.y = y
 	qua.z = z
@@ -49,38 +49,38 @@ func (qua *Quaternion) Set(x float64, y float64, z float64, w float64) {
 	qua.changeEvent.Emit(qua, nil)
 }
 
-func (qua *Quaternion) GetX() float64 {
+func (qua *Quaternion) GetX() float32 {
 	return qua.x
 }
 
-func (qua *Quaternion) SetX(x float64) {
+func (qua *Quaternion) SetX(x float32) {
 	qua.x = x
 	qua.changeEvent.Emit(qua, nil)
 }
 
-func (qua *Quaternion) GetY() float64 {
+func (qua *Quaternion) GetY() float32 {
 	return qua.y
 }
 
-func (qua *Quaternion) SetY(y float64) {
+func (qua *Quaternion) SetY(y float32) {
 	qua.y = y
 	qua.changeEvent.Emit(qua, nil)
 }
 
-func (qua *Quaternion) GetZ() float64 {
+func (qua *Quaternion) GetZ() float32 {
 	return qua.z
 }
 
-func (qua *Quaternion) SetZ(z float64) {
+func (qua *Quaternion) SetZ(z float32) {
 	qua.z = z
 	qua.changeEvent.Emit(qua, nil)
 }
 
-func (qua *Quaternion) GetW() float64 {
+func (qua *Quaternion) GetW() float32 {
 	return qua.w
 }
 
-func (qua *Quaternion) SetW(w float64) {
+func (qua *Quaternion) SetW(w float32) {
 	qua.w = w
 	qua.changeEvent.Emit(qua, nil)
 }
@@ -167,12 +167,12 @@ func (qua *Quaternion) SetFromEuler(euler *Euler, update bool) {
 
 func (qua *Quaternion) SetFromAxisAngle(axis *Vector3, angle Angle) {
 	halfAngle := angle / 2
-	s := math.Sin(float64(halfAngle))
+	s := math.Sin(float32(halfAngle))
 
 	qua.x = axis.X * s
 	qua.y = axis.Y * s
 	qua.z = axis.Z * s
-	qua.w = math.Cos(float64(halfAngle))
+	qua.w = math.Cos(float32(halfAngle))
 
 	qua.changeEvent.Emit(qua, nil)
 }
@@ -189,7 +189,7 @@ func (qua *Quaternion) SetFromRotationMatrix(m *Matrix4) {
 	m33 := m.elements[10]
 
 	trace := m11 + m22 + m33
-	var s float64
+	var s float32
 
 	if trace > 0 {
 		s = 0.5 / math.Sqrt(trace+1.0)
@@ -225,8 +225,8 @@ func (qua *Quaternion) SetFromRotationMatrix(m *Matrix4) {
 }
 
 func (qua *Quaternion) SetFromUnitVectors(vFrom *Vector3, vTo *Vector3) {
-	const EPS float64 = 0.000001
-	var r float64
+	const EPS float32 = 0.000001
+	var r float32
 	v1 := NewDefaultVector3()
 
 	r = vFrom.Dot(vTo) + 1
@@ -251,11 +251,11 @@ func (qua *Quaternion) SetFromUnitVectors(vFrom *Vector3, vTo *Vector3) {
 	qua.Normalize()
 }
 
-func (qua *Quaternion) AngleTo(q *Quaternion) float64 {
+func (qua *Quaternion) AngleTo(q *Quaternion) float32 {
 	return 2 * math.Acos(math.Abs(Clamp(qua.Dot(q), - 1, 1)))
 }
 
-func (qua *Quaternion) RotateTowards(q *Quaternion, step float64) {
+func (qua *Quaternion) RotateTowards(q *Quaternion, step float32) {
 	angle := qua.AngleTo(q)
 	if angle == 0 {
 		return
@@ -276,15 +276,15 @@ func (qua *Quaternion) Conjugate() {
 	qua.changeEvent.Emit(qua, nil)
 }
 
-func (qua *Quaternion) Dot(v *Quaternion) float64 {
+func (qua *Quaternion) Dot(v *Quaternion) float32 {
 	return qua.x*v.x + qua.y*v.y + qua.z*v.z + qua.w*v.w
 }
 
-func (qua *Quaternion) GetLengthSq() float64 {
+func (qua *Quaternion) GetLengthSq() float32 {
 	return qua.x*qua.x + qua.y*qua.y + qua.z*qua.z + qua.w*qua.w
 }
 
-func (qua *Quaternion) GetLength() float64 {
+func (qua *Quaternion) GetLength() float32 {
 	return math.Sqrt(qua.GetLengthSq())
 }
 
@@ -325,7 +325,7 @@ func (qua *Quaternion) MultiplyQuaternions(a *Quaternion, b *Quaternion) {
 	qua.changeEvent.Emit(qua, nil)
 }
 
-func (qua *Quaternion) Slerp(qb *Quaternion, t float64) {
+func (qua *Quaternion) Slerp(qb *Quaternion, t float32) {
 	if t == 0 {
 		return
 	} else if t == 1 {
@@ -364,7 +364,7 @@ func (qua *Quaternion) Slerp(qb *Quaternion, t float64) {
 
 	var sqrSinHalfTheta = 1.0 - cosHalfTheta*cosHalfTheta
 
-	if sqrSinHalfTheta <= math.SmallestNonzeroFloat64 {
+	if sqrSinHalfTheta <= math.SmallestNonzerofloat32 {
 		s := 1 - t
 		qua.w = s*w + t*qua.w
 		qua.x = s*x + t*qua.x
@@ -391,11 +391,11 @@ func (qua *Quaternion) Equals(q *Quaternion) bool {
 	return qua.x == q.x && qua.y == q.y && qua.z == q.z
 }
 
-func (qua *Quaternion) ToArray() [4]float64 {
-	return [4]float64{qua.x, qua.y, qua.z, qua.w}
+func (qua *Quaternion) ToArray() [4]float32 {
+	return [4]float32{qua.x, qua.y, qua.z, qua.w}
 }
 
-func SlerpQuaternion(qa *Quaternion, qb *Quaternion, qm *Quaternion, t float64) {
+func SlerpQuaternion(qa *Quaternion, qb *Quaternion, qm *Quaternion, t float32) {
 	qm.Copy(qa)
 	qm.Slerp(qb, t)
 }
@@ -403,7 +403,7 @@ func SlerpQuaternion(qa *Quaternion, qb *Quaternion, qm *Quaternion, t float64) 
 /*
  fuzz-free, array-based Quaternion SLERP operation
  */
-func SlerpFlatQuaternion(dst []float64, dstOffset int, src0 []float64, srcOffset0 int, src1 []float64, srcOffset1 int, t float64) {
+func SlerpFlatQuaternion(dst []float32, dstOffset int, src0 []float32, srcOffset0 int, src1 []float32, srcOffset1 int, t float32) {
 	x0 := src0[srcOffset0+0]
 	y0 := src0[srcOffset0+1]
 	z0 := src0[srcOffset0+2]
@@ -417,14 +417,14 @@ func SlerpFlatQuaternion(dst []float64, dstOffset int, src0 []float64, srcOffset
 	if w0 != w1 || x0 != x1 || y0 != y1 || z0 != z1 {
 		s := 1 - t
 		cos := x0*x1 + y0*y1 + z0*z1 + w0*w1
-		dir := float64(1)
+		dir := float32(1)
 		if cos < 0 {
 			dir = -1
 		}
 		sqrSin := 1 - cos*cos
 
 		// Skip the Slerp for tiny steps to avoid numeric problems:
-		if sqrSin > math.SmallestNonzeroFloat64 {
+		if sqrSin > math.SmallestNonzerofloat32 {
 			sin := math.Sqrt(sqrSin)
 			len := math.Atan2(sin, cos*dir)
 

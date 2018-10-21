@@ -3,15 +3,15 @@ package math
 import "math"
 
 type Vector2 struct {
-	X float64
-	Y float64
+	X float32
+	Y float32
 }
 
 func NewDefaultVector2() *Vector2 {
 	return NewVector2(0, 0)
 }
 
-func NewVector2(x float64, y float64) *Vector2 {
+func NewVector2(x float32, y float32) *Vector2 {
 	return &Vector2{
 		X: x,
 		Y: y,
@@ -25,43 +25,43 @@ func NewVector2Inf(sign int) *Vector2 {
 	}
 }
 
-func NewVector2FromArray(arr []float64, offset int) *Vector2 {
+func NewVector2FromArray(arr []float32, offset int) *Vector2 {
 	return &Vector2{
 		X: arr[offset],
 		Y: arr[offset+1],
 	}
 }
 
-func (vec *Vector2) GetWidth() float64 {
+func (vec *Vector2) GetWidth() float32 {
 	return vec.X
 }
 
-func (vec *Vector2) SetWidth(width float64) {
+func (vec *Vector2) SetWidth(width float32) {
 	vec.X = width
 }
 
-func (vec *Vector2) SetX(x float64) {
+func (vec *Vector2) SetX(x float32) {
 	vec.X = x
 }
 
-func (vec *Vector2) GetHeight() float64 {
+func (vec *Vector2) GetHeight() float32 {
 	return vec.Y
 }
 
-func (vec *Vector2) SetHeight(height float64) {
+func (vec *Vector2) SetHeight(height float32) {
 	vec.Y = height
 }
 
-func (vec *Vector2) SetY(y float64) {
+func (vec *Vector2) SetY(y float32) {
 	vec.Y = y
 }
 
-func (vec *Vector2) Set(x float64, y float64) {
+func (vec *Vector2) Set(x float32, y float32) {
 	vec.X = x
 	vec.Y = y
 }
 
-func (vec *Vector2) SetScalar(num float64) {
+func (vec *Vector2) SetScalar(num float32) {
 	vec.X = num
 	vec.Y = num
 }
@@ -83,7 +83,7 @@ func (vec *Vector2) Add(v *Vector2) {
 	vec.Y += v.Y
 }
 
-func (vec *Vector2) AddScalar(num float64) {
+func (vec *Vector2) AddScalar(num float32) {
 	vec.X += num
 	vec.Y += num
 }
@@ -93,7 +93,7 @@ func (vec *Vector2) SetAddVectors(v1 *Vector2, v2 *Vector2) {
 	vec.Y = v1.Y + v2.Y
 }
 
-func (vec *Vector2) AddScaledVector(v1 *Vector2, scale float64) {
+func (vec *Vector2) AddScaledVector(v1 *Vector2, scale float32) {
 	vec.X += v1.X * scale
 	vec.Y += v1.Y * scale
 }
@@ -103,7 +103,7 @@ func (vec *Vector2) Sub(v *Vector2) {
 	vec.Y -= v.Y
 }
 
-func (vec *Vector2) SubScalar(num float64) {
+func (vec *Vector2) SubScalar(num float32) {
 	vec.X -= num
 	vec.Y -= num
 }
@@ -118,7 +118,7 @@ func (vec *Vector2) Multiply(v *Vector2) {
 	vec.Y *= v.Y
 }
 
-func (vec *Vector2) MultiplyScalar(num float64) {
+func (vec *Vector2) MultiplyScalar(num float32) {
 	vec.X *= num
 	vec.Y *= num
 }
@@ -128,7 +128,7 @@ func (vec *Vector2) Divide(v *Vector2) {
 	vec.Y /= v.Y
 }
 
-func (vec *Vector2) DivideScalar(num float64) {
+func (vec *Vector2) DivideScalar(num float32) {
 	vec.X /= num
 	vec.Y /= num
 }
@@ -160,13 +160,13 @@ func (vec *Vector2) Clamp(min *Vector2, max *Vector2) {
 	vec.Y = math.Max(min.Y, math.Min(max.Y, vec.Y))
 }
 
-func (vec *Vector2) ClampScalar(min float64, max float64) {
+func (vec *Vector2) ClampScalar(min float32, max float32) {
 	minVec := NewVector2(min, min)
 	maxVec := NewVector2(max, max)
 	vec.Clamp(minVec, maxVec)
 }
 
-func (vec *Vector2) ClampLength(min float64, max float64) {
+func (vec *Vector2) ClampLength(min float32, max float32) {
 	length := vec.GetLength()
 
 	div := length
@@ -212,28 +212,28 @@ func (vec *Vector2) Negate() {
 	vec.Y = -vec.Y
 }
 
-func (vec *Vector2) Dot(v *Vector2) float64 {
+func (vec *Vector2) Dot(v *Vector2) float32 {
 	return vec.X*v.X + vec.Y*v.Y
 }
 
-func (vec *Vector2) Cross(v *Vector2) float64 {
+func (vec *Vector2) Cross(v *Vector2) float32 {
 	return vec.X*v.X - vec.Y + v.Y
 }
 
-func (vec *Vector2) GetLengthSq() float64 {
+func (vec *Vector2) GetLengthSq() float32 {
 	return vec.X*vec.X + vec.Y*vec.Y
 }
 
-func (vec *Vector2) GetLength() float64 {
+func (vec *Vector2) GetLength() float32 {
 	return math.Sqrt(vec.X*vec.X + vec.Y*vec.Y)
 }
 
-func (vec *Vector2) SetLength(length float64) {
+func (vec *Vector2) SetLength(length float32) {
 	vec.Normalize()
 	vec.MultiplyScalar(length)
 }
 
-func (vec *Vector2) GetManhattanLength() float64 {
+func (vec *Vector2) GetManhattanLength() float32 {
 	return math.Abs(vec.X) + math.Abs(vec.Y)
 }
 
@@ -245,7 +245,7 @@ func (vec *Vector2) Normalize() {
 	vec.DivideScalar(div)
 }
 
-func (vec *Vector2) GetAngle() float64 {
+func (vec *Vector2) GetAngle() float32 {
 	angle := math.Atan2(vec.Y, vec.X)
 
 	if angle < 0 {
@@ -255,26 +255,26 @@ func (vec *Vector2) GetAngle() float64 {
 	return angle
 }
 
-func (vec *Vector2) GetDistanceTo(v *Vector2) float64 {
+func (vec *Vector2) GetDistanceTo(v *Vector2) float32 {
 	return math.Sqrt(vec.GetDistanceToSquared(v))
 }
 
-func (vec *Vector2) GetDistanceToSquared(v *Vector2) float64 {
+func (vec *Vector2) GetDistanceToSquared(v *Vector2) float32 {
 	dx := vec.X - v.X
 	dy := vec.Y - v.Y
 	return dx*dx + dy*dy
 }
 
-func (vec *Vector2) GetManhattanDistanceTo(v *Vector2) float64 {
+func (vec *Vector2) GetManhattanDistanceTo(v *Vector2) float32 {
 	return math.Abs(vec.X-v.X) + math.Abs(vec.Y-v.Y)
 }
 
-func (vec *Vector2) Lerp(v *Vector2, alpha float64) {
+func (vec *Vector2) Lerp(v *Vector2, alpha float32) {
 	vec.X += (v.X - vec.X) * alpha
 	vec.Y += (v.Y - vec.Y) * alpha
 }
 
-func (vec *Vector2) LerpVectors(v1 *Vector2, v2 *Vector2, alpha float64) {
+func (vec *Vector2) LerpVectors(v1 *Vector2, v2 *Vector2, alpha float32) {
 	vec.SetSubVectors(v2, v1)
 	vec.MultiplyScalar(alpha)
 	vec.Add(v1)
@@ -284,7 +284,7 @@ func (vec *Vector2) Equals(v *Vector2) bool {
 	return vec.X == v.X && vec.Y == v.Y
 }
 
-func (vec *Vector2) RotateAround(center *Vector2, angle float64) {
+func (vec *Vector2) RotateAround(center *Vector2, angle float32) {
 	c := math.Cos(angle)
 	s := math.Sin(angle)
 
@@ -295,11 +295,11 @@ func (vec *Vector2) RotateAround(center *Vector2, angle float64) {
 	vec.Y = x*s + y*c + center.Y
 }
 
-func (vec *Vector2) ToArray() [2]float64 {
-	return [2]float64{vec.X, vec.Y}
+func (vec *Vector2) ToArray() [2]float32 {
+	return [2]float32{vec.X, vec.Y}
 }
 
-func (vec *Vector2) CopyToArray(array []float64, offset int) {
+func (vec *Vector2) CopyToArray(array []float32, offset int) {
 	va := vec.ToArray()
 	copy(array[offset:], va[0:])
 }
