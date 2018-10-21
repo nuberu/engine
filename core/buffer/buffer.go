@@ -3,7 +3,7 @@ package buffer
 // Memory optimized buffer
 type buffer struct {
 	typeSize   uint8
-	size       int
+	size       uint
 	normalized bool
 	dynamic    bool
 }
