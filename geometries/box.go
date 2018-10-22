@@ -1,14 +1,14 @@
 package geometries
 
 import (
+	"github.com/tokkenno/seed/core"
 	"github.com/tokkenno/seed/core/buffer"
 	"github.com/tokkenno/seed/core/constant"
-	"github.com/tokkenno/seed/core/geometry"
 	"github.com/tokkenno/seed/math"
 )
 
 type Box struct {
-	geometry.Geometry
+	core.Geometry
 
 	width          float32
 	height         float32
@@ -28,7 +28,6 @@ func NewBoxWithSegments(width, height, depth float32, widthSegments, heightSegme
 
 type BoxBuffer struct {
 	Box
-	geometry.Buffer
 
 	numberOfVertices uint
 	groupStart       uint

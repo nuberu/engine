@@ -12,7 +12,7 @@ type Camera struct {
 	projectionMatrixInverse math.Matrix4
 }
 
-func newCamera() Camera {
+func NewCamera() *Camera {
 	cam := Camera{
 		Object3: *NewObject(),
 		matrixWorldInverse: *math.NewDefaultMatrix4(),
@@ -20,7 +20,7 @@ func newCamera() Camera {
 		projectionMatrixInverse: *math.NewDefaultMatrix4(),
 	}
 
-	return cam
+	return &cam
 }
 
 func (camera *Camera) IsCamera() bool {

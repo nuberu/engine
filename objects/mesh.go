@@ -2,20 +2,23 @@ package objects
 
 import (
 	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/core/geometry"
-	"github.com/tokkenno/seed/core/material"
 	"github.com/tokkenno/seed/render/draw"
 )
 
 type Mesh struct {
 	core.Object3
 
-	geometry *geometry.Geometry
+	geometry *core.Geometry
 	material *core.Material
 	drawMode draw.Mode
 
 	morphTargetInfluences []int // FIXME: type
 	morphTargetDictionary map[int]int // FIXME: type
+}
+
+func NewMesh(geometry *core.Geometry, material *core.Material) *Mesh {
+	// TODO
+	return nil
 }
 
 func (mesh *Mesh) SetDrawMode(mode draw.Mode) {

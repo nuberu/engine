@@ -1,5 +1,7 @@
 package cameras
 
+import "github.com/tokkenno/seed/core"
+
 type orthographicView struct {
 	enabled    bool
 	fullWidth  float32
@@ -35,7 +37,7 @@ func (ov *orthographicView) Clone() *orthographicView {
 }
 
 type Orthographic struct {
-	Camera
+	core.Camera
 
 	zoom float32
 	view orthographicView
@@ -50,7 +52,7 @@ type Orthographic struct {
 
 func NewOrthographic(left, top, right, bottom float32, near, far float32) *Orthographic {
 	return &Orthographic{
-		Camera: *newCamera(),
+		Camera: *core.NewCamera(),
 		zoom:   0.0,
 		view:   *newOrthographicView(),
 		left:   left,
