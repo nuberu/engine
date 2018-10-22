@@ -1,7 +1,8 @@
 package math
 
 import (
-	"math"
+	"github.com/tokkenno/seed/core/types"
+	nativeMath "math"
 )
 
 type Vector3 struct {
@@ -17,6 +18,13 @@ func NewVector3(x float32, y float32, z float32) *Vector3 {
 	return &Vector3{
 		Vector2: *NewVector2(x, y),
 		Z:       z,
+	}
+}
+
+func NewVector3Inf(sign int) *Vector3 {
+	return &Vector3{
+		Vector2: *NewVector2Inf(sign),
+		Z: float32(nativeMath.Inf(sign)),
 	}
 }
 
@@ -49,10 +57,10 @@ func (vec *Vector3) SetFromSpherical(s *Spherical) {
 }
 
 func (vec *Vector3) SetFromSphericalCoordinates(radius float32, phi float32, theta float32) {
-	sinPhiRadius := math.Sin(phi) * radius
-	vec.X = sinPhiRadius * math.Sin(theta)
-	vec.Y = math.Cos(phi) * radius
-	vec.Z = sinPhiRadius * math.Cos(theta)
+	sinPhiRadius := Sin(phi) * radius
+	vec.X = sinPhiRadius * Sin(theta)
+	vec.Y = Cos(phi) * radius
+	vec.Z = sinPhiRadius * Cos(theta)
 }
 
 func (vec *Vector3) SetFromCylindrical(c *Cylindrical) {
@@ -60,9 +68,9 @@ func (vec *Vector3) SetFromCylindrical(c *Cylindrical) {
 }
 
 func (vec *Vector3) SetFromCylindricalCoordinates(radius float32, theta float32, y float32) {
-	vec.X = radius * math.Sin(theta)
+	vec.X = radius * Sin(theta)
 	vec.Y = y
-	vec.Z = radius * math.Cos(theta)
+	vec.Z = radius * Cos(theta)
 }
 
 func (vec *Vector3) SetFromMatrixPosition(m *Matrix4) {
@@ -180,7 +188,7 @@ func (vec *Vector3) ApplyEuler(euler *Euler) {
 	vec.ApplyQuaternion(quaternion)
 }
 
-func (vec *Vector3) ApplyAxisAngle(axis *Vector3, angle float32) {
+func (vec *Vector3) ApplyAxisAngle(axis *Vector3, angle types.Angle) {
 	quaternion := NewDefaultQuaternion()
 	quaternion.SetFromAxisAngle(axis, angle)
 	vec.ApplyQuaternion(quaternion)
@@ -231,9 +239,9 @@ func (vec *Vector3) ApplyQuaternion(q *Quaternion) {
 	vec.Z = iz*qw + iw*- qz + ix*- qy - iy*- qx
 }
 
+// input: THREE.Matrix4 affine matrix
+// vector interpreted as a direction
 func (vec *Vector3) TransformDirection(matrix *Matrix4) {
-	// input: THREE.Matrix4 affine matrix
-	// vector interpreted as a direction
 	x := vec.X
 	y := vec.Y
 	z := vec.Z
@@ -246,24 +254,22 @@ func (vec *Vector3) TransformDirection(matrix *Matrix4) {
 }
 
 func (vec *Vector3) Min(v *Vector3) {
-	vec.X = math.Min(vec.X, v.X)
-	vec.Y = math.Min(vec.Y, v.Y)
-	vec.Z = math.Min(vec.Z, v.Z)
+	vec.X = Min(vec.X, v.X)
+	vec.Y = Min(vec.Y, v.Y)
+	vec.Z = Min(vec.Z, v.Z)
 }
 
 func (vec *Vector3) Max(v *Vector3) {
-	vec.X = math.Max(vec.X, v.X)
-	vec.Y = math.Max(vec.Y, v.Y)
-	vec.Z = math.Max(vec.Z, v.Z)
+	vec.X = Max(vec.X, v.X)
+	vec.Y = Max(vec.Y, v.Y)
+	vec.Z = Max(vec.Z, v.Z)
 }
 
-/*
- Clamps the value to be between min and max.
- */
+// Clamps the value to be between min and max.
 func (vec *Vector3) Clamp(min *Vector3, max *Vector3) {
-	vec.X = math.Max(min.X, math.Min(max.X, vec.X))
-	vec.Y = math.Max(min.Y, math.Min(max.Y, vec.Y))
-	vec.Z = math.Max(min.Z, math.Min(max.Z, vec.Z))
+	vec.X = Max(min.X, Min(max.X, vec.X))
+	vec.Y = Max(min.Y, Min(max.Y, vec.Y))
+	vec.Z = Max(min.Z, Min(max.Z, vec.Z))
 }
 
 func (vec *Vector3) ClampScalar(min float32, max float32) {
@@ -281,44 +287,44 @@ func (vec *Vector3) ClampLength(min float32, max float32) {
 	}
 
 	vec.DivideScalar(div)
-	vec.MultiplyScalar(math.Max(min, math.Min(max, length)))
+	vec.MultiplyScalar(Max(min, Min(max, length)))
 }
 
 func (vec *Vector3) Floor() {
-	vec.X = math.Floor(vec.X)
-	vec.Y = math.Floor(vec.Y)
-	vec.Z = math.Floor(vec.Z)
+	vec.X = Floor(vec.X)
+	vec.Y = Floor(vec.Y)
+	vec.Z = Floor(vec.Z)
 }
 
 func (vec *Vector3) Ceil() {
-	vec.X = math.Ceil(vec.X)
-	vec.Y = math.Ceil(vec.Y)
-	vec.Z = math.Ceil(vec.Z)
+	vec.X = Ceil(vec.X)
+	vec.Y = Ceil(vec.Y)
+	vec.Z = Ceil(vec.Z)
 }
 
 func (vec *Vector3) Round() {
-	vec.X = math.Round(vec.X)
-	vec.Y = math.Round(vec.Y)
-	vec.Z = math.Round(vec.Z)
+	vec.X = Round(vec.X)
+	vec.Y = Round(vec.Y)
+	vec.Z = Round(vec.Z)
 }
 
 func (vec *Vector3) RoundToZero() {
 	if vec.X < 0 {
-		vec.X = math.Ceil(vec.X)
+		vec.X = Ceil(vec.X)
 	} else {
-		vec.X = math.Floor(vec.X)
+		vec.X = Floor(vec.X)
 	}
 
 	if vec.Y < 0 {
-		vec.Y = math.Ceil(vec.Y)
+		vec.Y = Ceil(vec.Y)
 	} else {
-		vec.Y = math.Floor(vec.Y)
+		vec.Y = Floor(vec.Y)
 	}
 
 	if vec.Z < 0 {
-		vec.Z = math.Ceil(vec.Z)
+		vec.Z = Ceil(vec.Z)
 	} else {
-		vec.Z = math.Floor(vec.Z)
+		vec.Z = Floor(vec.Z)
 	}
 }
 
@@ -353,7 +359,7 @@ func (vec *Vector3) GetLengthSq() float32 {
 }
 
 func (vec *Vector3) GetLength() float32 {
-	return math.Sqrt(vec.GetLengthSq())
+	return Sqrt(vec.GetLengthSq())
 }
 
 func (vec *Vector3) SetLength(length float32) {
@@ -362,7 +368,7 @@ func (vec *Vector3) SetLength(length float32) {
 }
 
 func (vec *Vector3) GetManhattanLength() float32 {
-	return math.Abs(vec.X) + math.Abs(vec.Y) + math.Abs(vec.Z)
+	return Abs(vec.X) + Abs(vec.Y) + Abs(vec.Z)
 }
 
 func (vec *Vector3) Normalize() {
@@ -392,12 +398,12 @@ func (vec *Vector3) Reflect(normal *Vector3) {
 }
 
 func (vec *Vector3) AngleTo(v *Vector3) float32 {
-	theta := vec.Dot(v) / (math.Sqrt(vec.GetLengthSq() * v.GetLengthSq()))
-	return math.Acos(Clamp(theta, -1, 1))
+	theta := vec.Dot(v) / (Sqrt(vec.GetLengthSq() * v.GetLengthSq()))
+	return Acos(Clamp(theta, -1, 1))
 }
 
 func (vec *Vector3) GetDistanceTo(v *Vector3) float32 {
-	return math.Sqrt(vec.GetDistanceToSquared(v))
+	return Sqrt(vec.GetDistanceToSquared(v))
 }
 
 func (vec *Vector3) GetDistanceToSquared(v *Vector3) float32 {
@@ -408,7 +414,7 @@ func (vec *Vector3) GetDistanceToSquared(v *Vector3) float32 {
 }
 
 func (vec *Vector3) GetManhattanDistanceTo(v *Vector3) float32 {
-	return math.Abs(vec.X-v.X) + math.Abs(vec.Y-v.Y) + math.Abs(vec.Z-v.Z)
+	return Abs(vec.X-v.X) + Abs(vec.Y-v.Y) + Abs(vec.Z-v.Z)
 }
 
 func (vec *Vector3) Lerp(v *Vector3, alpha float32) {

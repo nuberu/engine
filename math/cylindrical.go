@@ -1,7 +1,5 @@
 package math
 
-import "math"
-
 type Cylindrical struct {
 	radius float32 // distance from the origin to a point in the x-z plane
 	theta  float32 // counterclockwise angle in the x-z plane measured in radians from the positive z-axis
@@ -45,7 +43,7 @@ func (cyl *Cylindrical) SetFromVector3(vec *Vector3) {
 }
 
 func (cyl *Cylindrical) SetFromCartesianCoordinates(x float32, y float32, z float32) {
-	cyl.radius = math.Sqrt(x*x + z*z)
-	cyl.theta = math.Atan2(x, z)
+	cyl.radius = Sqrt(x*x + z*z)
+	cyl.theta = Atan2(x, z)
 	cyl.y = y
 }

@@ -1,7 +1,5 @@
 package math
 
-import "math"
-
 type Spherical struct {
 	radius float32
 	phi    float32 // polar angle
@@ -42,7 +40,7 @@ func (sphere *Spherical) Copy(other *Spherical) {
 
 func (sphere *Spherical) MakeSafe() {
 	const EPS = float32(0.000001)
-	sphere.phi = math.Max(EPS, math.Min(math.Pi-EPS, sphere.phi))
+	sphere.phi = Max(EPS, Min(Pi-EPS, sphere.phi))
 }
 
 func (sphere *Spherical) SetFromVector3(vec *Vector3) {
@@ -50,13 +48,13 @@ func (sphere *Spherical) SetFromVector3(vec *Vector3) {
 }
 
 func (sphere *Spherical) SetFromCartesianCoordinates(x float32, y float32, z float32) {
-	sphere.radius = math.Sqrt(x*x + y*y + z*z)
+	sphere.radius = Sqrt(x*x + y*y + z*z)
 
 	if sphere.radius == 0 {
 		sphere.theta = 0
 		sphere.phi = 0
 	} else {
-		sphere.theta = math.Atan2(x, z)
-		sphere.phi = math.Acos(Clamp(y/sphere.radius, - 1, 1))
+		sphere.theta = Atan2(x, z)
+		sphere.phi = Acos(Clamp(y/sphere.radius, - 1, 1))
 	}
 }

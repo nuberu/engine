@@ -1,7 +1,8 @@
 package core
 
 import (
-	"github.com/tokkenno/seed/event"
+	"github.com/tokkenno/seed/core/types"
+	"github.com/tokkenno/seed/core/event"
 	"github.com/tokkenno/seed/math"
 )
 
@@ -119,7 +120,7 @@ func (obj *Object3) ApplyQuaternion(q *math.Quaternion) {
 	obj.quaternion.PreMultiply(q)
 }
 
-func (obj *Object3) SetRotationFromAxisAngle(axis *math.Vector3, angle math.Angle) {
+func (obj *Object3) SetRotationFromAxisAngle(axis *math.Vector3, angle types.Angle) {
 	obj.quaternion.SetFromAxisAngle(axis, angle)
 }
 
@@ -135,27 +136,27 @@ func (obj *Object3) SetRotationFromQuaternion(q *math.Quaternion) {
 	obj.quaternion.Copy(q)
 }
 
-func (obj *Object3) RotateOnAxis(axis *math.Vector3, angle math.Angle) {
+func (obj *Object3) RotateOnAxis(axis *math.Vector3, angle types.Angle) {
 	q1 := math.NewDefaultQuaternion()
 	q1.SetFromAxisAngle(axis, angle)
 	obj.quaternion.Multiply(q1)
 }
 
-func (obj *Object3) RotateOnWorldAxis(axis *math.Vector3, angle math.Angle) {
+func (obj *Object3) RotateOnWorldAxis(axis *math.Vector3, angle types.Angle) {
 	q1 := math.NewDefaultQuaternion()
 	q1.SetFromAxisAngle(axis, angle)
 	obj.quaternion.PreMultiply(q1)
 }
 
-func (obj *Object3) RotateX(angle math.Angle) {
+func (obj *Object3) RotateX(angle types.Angle) {
 	obj.RotateOnAxis(math.NewVector3(1, 0, 0), angle)
 }
 
-func (obj *Object3) RotateY(angle math.Angle) {
+func (obj *Object3) RotateY(angle types.Angle) {
 	obj.RotateOnAxis(math.NewVector3(0, 1, 0), angle)
 }
 
-func (obj *Object3) RotateZ(angle math.Angle) {
+func (obj *Object3) RotateZ(angle types.Angle) {
 	obj.RotateOnAxis(math.NewVector3(0, 0, 1), angle)
 }
 
@@ -184,7 +185,7 @@ func (obj *Object3) LocalToWorld(vector *math.Vector3) {
 
 func (obj *Object3) WorldToLocal(vector *math.Vector3) {
 	m1 := math.NewDefaultMatrix4()
-	m1.GetInverse(&obj.matrixWorld, false)
+	m1.SetInverseOf(&obj.matrixWorld, false)
 	vector.ApplyMatrix4(m1)
 }
 
@@ -408,14 +409,14 @@ func (obj *Object3) Copy(source *Object3, recursive bool) {
 	}
 }
 
-func (obj *Object3) updateMatrix() {
+func (obj *Object3) UpdateMatrix() {
 	obj.matrix.Compose(&obj.Position, &obj.quaternion, &obj.Scale)
 	obj.matrixWorldNeedsUpdate = true
 }
 
 func (obj *Object3) UpdateMatrixWorld(force bool) {
 	if obj.matrixAutoUpdate {
-		obj.updateMatrix()
+		obj.UpdateMatrix()
 	}
 
 	if obj.matrixWorldNeedsUpdate || force {
@@ -442,7 +443,7 @@ func (obj *Object3) updateWorldMatrix(updateParents, updateChildren bool) {
 	}
 
 	if obj.matrixAutoUpdate {
-		obj.updateMatrix()
+		obj.UpdateMatrix()
 	}
 
 	if obj.parent == nil {

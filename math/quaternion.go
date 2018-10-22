@@ -1,8 +1,9 @@
 package math
 
 import (
-	"github.com/tokkenno/seed/event"
-	"math"
+	"github.com/tokkenno/seed/core/types"
+	"github.com/tokkenno/seed/core/event"
+	nativeMath "math"
 )
 
 type Quaternion struct {
@@ -102,24 +103,20 @@ func (qua *Quaternion) Copy(q *Quaternion) {
 	qua.changeEvent.Emit(qua, nil)
 }
 
-/*
-	http://www.mathworks.com/matlabcentral/fileexchange/
-	20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors/
-	content/SpinCalc.m
- */
+// http://www.mathworks.com/matlabcentral/fileexchange/20696-function-to-convert-between-dcm-euler-angles-quaternions-and-euler-vectors/content/SpinCalc.m
 func (qua *Quaternion) SetFromEuler(euler *Euler, update bool) {
 	x := euler.x
 	y := euler.y
 	z := euler.z
 	order := euler.order
 
-	c1 := math.Cos(x / 2)
-	c2 := math.Cos(y / 2)
-	c3 := math.Cos(z / 2)
+	c1 := Cos(x / 2)
+	c2 := Cos(y / 2)
+	c3 := Cos(z / 2)
 
-	s1 := math.Cos(x / 2)
-	s2 := math.Cos(y / 2)
-	s3 := math.Cos(z / 2)
+	s1 := Cos(x / 2)
+	s2 := Cos(y / 2)
+	s3 := Cos(z / 2)
 
 	switch order {
 	case EulerOrderXYZ:
@@ -165,14 +162,14 @@ func (qua *Quaternion) SetFromEuler(euler *Euler, update bool) {
 	}
 }
 
-func (qua *Quaternion) SetFromAxisAngle(axis *Vector3, angle Angle) {
+func (qua *Quaternion) SetFromAxisAngle(axis *Vector3, angle types.Angle) {
 	halfAngle := angle / 2
-	s := math.Sin(float32(halfAngle))
+	s := Sin(float32(halfAngle))
 
 	qua.x = axis.X * s
 	qua.y = axis.Y * s
 	qua.z = axis.Z * s
-	qua.w = math.Cos(float32(halfAngle))
+	qua.w = Cos(float32(halfAngle))
 
 	qua.changeEvent.Emit(qua, nil)
 }
@@ -192,28 +189,28 @@ func (qua *Quaternion) SetFromRotationMatrix(m *Matrix4) {
 	var s float32
 
 	if trace > 0 {
-		s = 0.5 / math.Sqrt(trace+1.0)
+		s = 0.5 / Sqrt(trace+1.0)
 
 		qua.w = 0.25 / s
 		qua.x = (m32 - m23) * s
 		qua.y = (m13 - m31) * s
 		qua.z = (m21 - m12) * s
 	} else if m11 > m22 && m11 > m33 {
-		s = 2.0 * math.Sqrt(1.0+m11-m22-m33)
+		s = 2.0 * Sqrt(1.0+m11-m22-m33)
 
 		qua.w = (m32 - m23) / s
 		qua.x = 0.25 * s
 		qua.y = (m12 + m21) / s
 		qua.z = (m13 + m31) / s
 	} else if m22 > m33 {
-		s = 2.0 * math.Sqrt(1.0+m22-m11-m33)
+		s = 2.0 * Sqrt(1.0+m22-m11-m33)
 
 		qua.w = (m13 - m31) / s
 		qua.x = (m12 + m21) / s
 		qua.y = 0.25 * s
 		qua.z = (m23 + m32) / s
 	} else {
-		s = 2.0 * math.Sqrt(1.0+m33-m11-m22)
+		s = 2.0 * Sqrt(1.0+m33-m11-m22)
 
 		qua.w = (m21 - m12) / s
 		qua.x = (m13 + m31) / s
@@ -234,7 +231,7 @@ func (qua *Quaternion) SetFromUnitVectors(vFrom *Vector3, vTo *Vector3) {
 	if r < EPS {
 		r = 0
 
-		if math.Abs(vFrom.X) > math.Abs(vFrom.Z) {
+		if Abs(vFrom.X) > Abs(vFrom.Z) {
 			v1.Set(-vFrom.Y, vFrom.X, 0)
 		} else {
 			v1.Set(0, -vFrom.Z, vFrom.Y)
@@ -252,7 +249,7 @@ func (qua *Quaternion) SetFromUnitVectors(vFrom *Vector3, vTo *Vector3) {
 }
 
 func (qua *Quaternion) AngleTo(q *Quaternion) float32 {
-	return 2 * math.Acos(math.Abs(Clamp(qua.Dot(q), - 1, 1)))
+	return 2 * Acos(Abs(Clamp(qua.Dot(q), - 1, 1)))
 }
 
 func (qua *Quaternion) RotateTowards(q *Quaternion, step float32) {
@@ -260,7 +257,7 @@ func (qua *Quaternion) RotateTowards(q *Quaternion, step float32) {
 	if angle == 0 {
 		return
 	}
-	t := math.Min(1, step/angle)
+	t := Min(1, step/angle)
 	qua.Slerp(q, t)
 }
 
@@ -285,7 +282,7 @@ func (qua *Quaternion) GetLengthSq() float32 {
 }
 
 func (qua *Quaternion) GetLength() float32 {
-	return math.Sqrt(qua.GetLengthSq())
+	return Sqrt(qua.GetLengthSq())
 }
 
 func (qua *Quaternion) Normalize() {
@@ -325,6 +322,7 @@ func (qua *Quaternion) MultiplyQuaternions(a *Quaternion, b *Quaternion) {
 	qua.changeEvent.Emit(qua, nil)
 }
 
+// http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
 func (qua *Quaternion) Slerp(qb *Quaternion, t float32) {
 	if t == 0 {
 		return
@@ -337,8 +335,6 @@ func (qua *Quaternion) Slerp(qb *Quaternion, t float32) {
 	y := qua.y
 	z := qua.z
 	w := qua.w
-
-	// http://www.euclideanspace.com/maths/algebra/realNormedAlgebra/quaternions/slerp/
 
 	var cosHalfTheta = w*qb.w + x*qb.x + y*qb.y + z*qb.z
 
@@ -364,7 +360,7 @@ func (qua *Quaternion) Slerp(qb *Quaternion, t float32) {
 
 	var sqrSinHalfTheta = 1.0 - cosHalfTheta*cosHalfTheta
 
-	if sqrSinHalfTheta <= math.SmallestNonzerofloat32 {
+	if sqrSinHalfTheta <= nativeMath.SmallestNonzeroFloat32 {
 		s := 1 - t
 		qua.w = s*w + t*qua.w
 		qua.x = s*x + t*qua.x
@@ -374,10 +370,10 @@ func (qua *Quaternion) Slerp(qb *Quaternion, t float32) {
 		return
 	}
 
-	sinHalfTheta := math.Sqrt(sqrSinHalfTheta)
-	halfTheta := math.Atan2(sinHalfTheta, cosHalfTheta)
-	ratioA := math.Sin((1-t)*halfTheta) / sinHalfTheta
-	ratioB := math.Sin(t*halfTheta) / sinHalfTheta
+	sinHalfTheta := Sqrt(sqrSinHalfTheta)
+	halfTheta := Atan2(sinHalfTheta, cosHalfTheta)
+	ratioA := Sin((1-t)*halfTheta) / sinHalfTheta
+	ratioB := Sin(t*halfTheta) / sinHalfTheta
 
 	qua.w = w*ratioA + qua.w*ratioB
 	qua.x = x*ratioA + qua.x*ratioB
@@ -400,9 +396,7 @@ func SlerpQuaternion(qa *Quaternion, qb *Quaternion, qm *Quaternion, t float32) 
 	qm.Slerp(qb, t)
 }
 
-/*
- fuzz-free, array-based Quaternion SLERP operation
- */
+// fuzz-free, array-based Quaternion SLERP operation
 func SlerpFlatQuaternion(dst []float32, dstOffset int, src0 []float32, srcOffset0 int, src1 []float32, srcOffset1 int, t float32) {
 	x0 := src0[srcOffset0+0]
 	y0 := src0[srcOffset0+1]
@@ -424,12 +418,12 @@ func SlerpFlatQuaternion(dst []float32, dstOffset int, src0 []float32, srcOffset
 		sqrSin := 1 - cos*cos
 
 		// Skip the Slerp for tiny steps to avoid numeric problems:
-		if sqrSin > math.SmallestNonzerofloat32 {
-			sin := math.Sqrt(sqrSin)
-			len := math.Atan2(sin, cos*dir)
+		if sqrSin > nativeMath.SmallestNonzeroFloat32 {
+			sin := Sqrt(sqrSin)
+			len := Atan2(sin, cos*dir)
 
-			s = math.Sin(s*len) / sin
-			t = math.Sin(t*len) / sin
+			s = Sin(s*len) / sin
+			t = Sin(t*len) / sin
 		}
 
 		tDir := t * dir
@@ -442,7 +436,7 @@ func SlerpFlatQuaternion(dst []float32, dstOffset int, src0 []float32, srcOffset
 		// Normalize in case we just did a lerp:
 		if s == 1-t {
 
-			f := 1 / math.Sqrt(x0*x0+y0*y0+z0*z0+w0*w0)
+			f := 1 / Sqrt(x0*x0+y0*y0+z0*z0+w0*w0)
 
 			x0 *= f
 			y0 *= f

@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/logger"
-	"math"
 )
 
 type Matrix3 struct {
@@ -71,8 +70,6 @@ func (matrix *Matrix3) Copy(other *Matrix3) {
 	copy(matrix.elements[0:], other.elements[0:])
 }
 
-// TODO: func (matrix *Matrix3) ApplyToBufferAttribute(buffer)
-
 func (matrix *Matrix3) Multiply(m *Matrix3) {
 	matrix.MultiplyMatrices(matrix, m)
 }
@@ -125,6 +122,7 @@ func (matrix *Matrix3) Inverse() error {
 	return matrix.SetInverse(matrix.Clone(), true)
 }
 
+// Set the inverse of [ma] in the current [matrix]
 func (matrix *Matrix3) SetInverse(ma *Matrix3, errorOnDegenerate bool) error {
 	t11 := ma.elements[8]*ma.elements[4] - ma.elements[5]*ma.elements[7]
 	t12 := ma.elements[5]*ma.elements[6] - ma.elements[8]*ma.elements[3]
@@ -171,6 +169,7 @@ func (matrix *Matrix3) Transpose() {
 	matrix.elements[7] = tmp
 }
 
+// Set the transpose of [ma] in the current [matrix]
 func (matrix *Matrix3) SetTranspose(ma *Matrix3) {
 	matrix.elements[0] = ma.elements[0]
 	matrix.elements[1] = ma.elements[3]
@@ -185,15 +184,16 @@ func (matrix *Matrix3) SetTranspose(ma *Matrix3) {
 	matrix.elements[8] = ma.elements[8]
 }
 
-func (matrix *Matrix3) GetNormalMatrix(m4 *Matrix4) {
-	matrix.SetFromMatrix4(m4)
+// Set the normal matrix of [ma] in the current matrix
+func (matrix *Matrix3) SetNormalMatrix(ma *Matrix4) {
+	matrix.SetFromMatrix4(ma)
 	matrix.SetInverse(matrix, false)
 	matrix.Transpose()
 }
 
 func (matrix *Matrix3) SetUvTransform(tx, ty, sx, sy, rotation, cx, cy float32) {
-	cos := math.Cos(rotation)
-	sin := math.Sin(rotation)
+	cos := Cos(rotation)
+	sin := Sin(rotation)
 
 	matrix.Set(
 		sx*cos, sx*sin, -sx*(cos*cx+sin*cy)+cx+tx,
@@ -214,8 +214,8 @@ func (matrix *Matrix3) Scale(sx float32, sy float32) {
 }
 
 func (matrix *Matrix3) Rotate(rotation float32) {
-	cos := math.Cos(rotation)
-	sin := math.Sin(rotation)
+	cos := Cos(rotation)
+	sin := Sin(rotation)
 
 	cpMatrix := matrix.Clone()
 
@@ -251,9 +251,9 @@ func (matrix *Matrix3) Equals(ma *Matrix3) bool {
 }
 
 func (matrix *Matrix3) EqualsRound(ma *Matrix3, decimals float32) bool {
-	mul := math.Pow(10, decimals)
+	mul := Pow(10, decimals)
 	for ind := range matrix.elements {
-		if math.Round(mul * matrix.elements[ind]) / mul != math.Round(mul * ma.elements[ind]) / mul {
+		if Round(mul * matrix.elements[ind]) / mul != Round(mul * ma.elements[ind]) / mul {
 			return false
 		}
 	}

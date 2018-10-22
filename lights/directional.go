@@ -1,16 +1,17 @@
 package lights
 
 import (
-	"github.com/tokkenno/seed/core/math"
+	"github.com/tokkenno/seed/core"
+	"github.com/tokkenno/seed/math"
 )
 
 type Directional struct {
-	Light
+	core.Light
 }
 
 func NewDirectional(color math.Color, intensity float32) *Directional {
 	light := Directional{
-		Light: *NewLight(color, intensity),
+		Light: *core.NewLight(color, intensity),
 	}
 
 	return &light

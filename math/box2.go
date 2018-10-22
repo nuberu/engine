@@ -109,7 +109,8 @@ func (box *Box2) IntersectsBox(b *Box2) bool {
 		b.max.Y < box.min.Y || b.min.Y > box.max.Y)
 }
 
-func (box *Box2) ClampPoint(point *Vector2, target *Vector2) *Vector2 {
+func (box *Box2) ClampPoint(point *Vector2) *Vector2 {
+	target := NewDefaultVector2()
 	target.Copy(point)
 	target.Clamp(&box.min, &box.max)
 	return target

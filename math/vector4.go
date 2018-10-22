@@ -1,7 +1,5 @@
 package math
 
-import "math"
-
 type Vector4 struct {
 	Vector3
 	W float32
@@ -154,8 +152,8 @@ func (vec *Vector4) ApplyMatrix4(m *Matrix4) {
 }
 
 func (vec *Vector4) SetAxisAngleFromQuaternion(q *Quaternion) {
-	vec.W = 2 * math.Acos(q.w)
-	s := math.Sqrt(1 - q.w*q.w)
+	vec.W = 2 * Acos(q.w)
+	s := Sqrt(1 - q.w*q.w)
 
 	if s < 0.0001 {
 		vec.X = 1
@@ -168,10 +166,9 @@ func (vec *Vector4) SetAxisAngleFromQuaternion(q *Quaternion) {
 	}
 }
 
+// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
+// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
 func (vec *Vector4) SetAxisAngleFromRotationMatrix(m *Matrix4) {
-	// http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToAngle/index.htm
-	// assumes the upper 3x3 of m is a pure rotation matrix (i.e, unscaled)
-
 	angle := float32(0)
 
 	// variables for result
@@ -195,18 +192,18 @@ func (vec *Vector4) SetAxisAngleFromRotationMatrix(m *Matrix4) {
 	m32 := m.elements[6]
 	m33 := m.elements[10]
 
-	if (math.Abs(m12-m21) < epsilon) &&
-		(math.Abs(m13-m31) < epsilon) &&
-		(math.Abs(m23-m32) < epsilon) {
+	if (Abs(m12-m21) < epsilon) &&
+		(Abs(m13-m31) < epsilon) &&
+		(Abs(m23-m32) < epsilon) {
 
 		// singularity found
 		// first check for identity matrix which must have +1 for all terms
 		// in leading diagonal and zero in other terms
 
-		if (math.Abs(m12+m21) < epsilon2) &&
-			(math.Abs(m13+m31) < epsilon2) &&
-			(math.Abs(m23+m32) < epsilon2) &&
-			(math.Abs(m11+m22+m33-3) < epsilon2) {
+		if (Abs(m12+m21) < epsilon2) &&
+			(Abs(m13+m31) < epsilon2) &&
+			(Abs(m23+m32) < epsilon2) &&
+			(Abs(m11+m22+m33-3) < epsilon2) {
 
 			// this singularity is identity matrix so angle = 0
 
@@ -218,7 +215,7 @@ func (vec *Vector4) SetAxisAngleFromRotationMatrix(m *Matrix4) {
 
 		// otherwise this singularity is angle = 180
 
-		angle = math.Pi
+		angle = Pi
 
 		xx := (m11 + 1) / 2
 		yy := (m22 + 1) / 2
@@ -234,7 +231,7 @@ func (vec *Vector4) SetAxisAngleFromRotationMatrix(m *Matrix4) {
 				y = 0.707106781
 				z = 0.707106781
 			} else {
-				x = math.Sqrt(xx)
+				x = Sqrt(xx)
 				y = xy / x
 				z = xz / x
 			}
@@ -245,7 +242,7 @@ func (vec *Vector4) SetAxisAngleFromRotationMatrix(m *Matrix4) {
 				y = 0
 				z = 0.707106781
 			} else {
-				y = math.Sqrt(yy)
+				y = Sqrt(yy)
 				x = xy / y
 				z = yz / y
 			}
@@ -256,7 +253,7 @@ func (vec *Vector4) SetAxisAngleFromRotationMatrix(m *Matrix4) {
 				y = 0.707106781
 				z = 0
 			} else {
-				z = math.Sqrt(zz)
+				z = Sqrt(zz)
 				x = xz / z
 				y = yz / z
 			}
@@ -267,9 +264,9 @@ func (vec *Vector4) SetAxisAngleFromRotationMatrix(m *Matrix4) {
 	}
 
 	// as we have reached here there are no singularities so we can handle normally
-	var s = math.Sqrt((m32-m23)*(m32-m23) + (m13-m31)*(m13-m31) + (m21-m12)*(m21-m12)) // used to normalize
+	var s = Sqrt((m32-m23)*(m32-m23) + (m13-m31)*(m13-m31) + (m21-m12)*(m21-m12)) // used to normalize
 
-	if math.Abs(s) < 0.001 {
+	if Abs(s) < 0.001 {
 		s = 1
 	}
 
@@ -278,31 +275,29 @@ func (vec *Vector4) SetAxisAngleFromRotationMatrix(m *Matrix4) {
 	vec.X = (m32 - m23) / s
 	vec.Y = (m13 - m31) / s
 	vec.Z = (m21 - m12) / s
-	vec.W = math.Acos((m11 + m22 + m33 - 1) / 2)
+	vec.W = Acos((m11 + m22 + m33 - 1) / 2)
 }
 
 func (vec *Vector4) Min(v *Vector4) {
-	vec.X = math.Min(vec.X, v.X)
-	vec.Y = math.Min(vec.Y, v.Y)
-	vec.Z = math.Min(vec.Z, v.Z)
-	vec.W = math.Min(vec.W, v.W)
+	vec.X = Min(vec.X, v.X)
+	vec.Y = Min(vec.Y, v.Y)
+	vec.Z = Min(vec.Z, v.Z)
+	vec.W = Min(vec.W, v.W)
 }
 
 func (vec *Vector4) Max(v *Vector4) {
-	vec.X = math.Max(vec.X, v.X)
-	vec.Y = math.Max(vec.Y, v.Y)
-	vec.Z = math.Max(vec.Z, v.Z)
-	vec.W = math.Max(vec.W, v.W)
+	vec.X = Max(vec.X, v.X)
+	vec.Y = Max(vec.Y, v.Y)
+	vec.Z = Max(vec.Z, v.Z)
+	vec.W = Max(vec.W, v.W)
 }
 
-/*
- Clamps the value to be between min and max.
- */
+// Clamps the value to be between min and max.
 func (vec *Vector4) Clamp(min *Vector4, max *Vector4) {
-	vec.X = math.Max(min.X, math.Min(max.X, vec.X))
-	vec.Y = math.Max(min.Y, math.Min(max.Y, vec.Y))
-	vec.Z = math.Max(min.Z, math.Min(max.Z, vec.Z))
-	vec.W = math.Max(min.W, math.Min(max.W, vec.W))
+	vec.X = Max(min.X, Min(max.X, vec.X))
+	vec.Y = Max(min.Y, Min(max.Y, vec.Y))
+	vec.Z = Max(min.Z, Min(max.Z, vec.Z))
+	vec.W = Max(min.W, Min(max.W, vec.W))
 }
 
 func (vec *Vector4) ClampScalar(min float32, max float32) {
@@ -320,53 +315,53 @@ func (vec *Vector4) ClampLength(min float32, max float32) {
 	}
 
 	vec.DivideScalar(div)
-	vec.MultiplyScalar(math.Max(min, math.Min(max, length)))
+	vec.MultiplyScalar(Max(min, Min(max, length)))
 }
 
 func (vec *Vector4) Floor() {
-	vec.X = math.Floor(vec.X)
-	vec.Y = math.Floor(vec.Y)
-	vec.Z = math.Floor(vec.Z)
-	vec.W = math.Floor(vec.W)
+	vec.X = Floor(vec.X)
+	vec.Y = Floor(vec.Y)
+	vec.Z = Floor(vec.Z)
+	vec.W = Floor(vec.W)
 }
 
 func (vec *Vector4) Ceil() {
-	vec.X = math.Ceil(vec.X)
-	vec.Y = math.Ceil(vec.Y)
-	vec.Z = math.Ceil(vec.Z)
-	vec.W = math.Ceil(vec.W)
+	vec.X = Ceil(vec.X)
+	vec.Y = Ceil(vec.Y)
+	vec.Z = Ceil(vec.Z)
+	vec.W = Ceil(vec.W)
 }
 
 func (vec *Vector4) Round() {
-	vec.X = math.Round(vec.X)
-	vec.Y = math.Round(vec.Y)
-	vec.Z = math.Round(vec.Z)
-	vec.W = math.Round(vec.W)
+	vec.X = Round(vec.X)
+	vec.Y = Round(vec.Y)
+	vec.Z = Round(vec.Z)
+	vec.W = Round(vec.W)
 }
 
 func (vec *Vector4) RoundToZero() {
 	if vec.X < 0 {
-		vec.X = math.Ceil(vec.X)
+		vec.X = Ceil(vec.X)
 	} else {
-		vec.X = math.Floor(vec.X)
+		vec.X = Floor(vec.X)
 	}
 
 	if vec.Y < 0 {
-		vec.Y = math.Ceil(vec.Y)
+		vec.Y = Ceil(vec.Y)
 	} else {
-		vec.Y = math.Floor(vec.Y)
+		vec.Y = Floor(vec.Y)
 	}
 
 	if vec.Z < 0 {
-		vec.Z = math.Ceil(vec.Z)
+		vec.Z = Ceil(vec.Z)
 	} else {
-		vec.Z = math.Floor(vec.Z)
+		vec.Z = Floor(vec.Z)
 	}
 
 	if vec.W < 0 {
-		vec.W = math.Ceil(vec.W)
+		vec.W = Ceil(vec.W)
 	} else {
-		vec.W = math.Floor(vec.W)
+		vec.W = Floor(vec.W)
 	}
 }
 
@@ -386,7 +381,7 @@ func (vec *Vector4) GetLengthSq() float32 {
 }
 
 func (vec *Vector4) GetLength() float32 {
-	return math.Sqrt(vec.GetLengthSq())
+	return Sqrt(vec.GetLengthSq())
 }
 
 func (vec *Vector4) SetLength(length float32) {
@@ -395,7 +390,7 @@ func (vec *Vector4) SetLength(length float32) {
 }
 
 func (vec *Vector4) GetManhattanLength() float32 {
-	return math.Abs(vec.X) + math.Abs(vec.Y) + math.Abs(vec.Z) + math.Abs(vec.W)
+	return Abs(vec.X) + Abs(vec.Y) + Abs(vec.Z) + Abs(vec.W)
 }
 
 func (vec *Vector4) Normalize() {

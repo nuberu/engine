@@ -1,6 +1,6 @@
 package math
 
-import "math"
+import nativeMath "math"
 
 type Vector2 struct {
 	X float32
@@ -20,8 +20,8 @@ func NewVector2(x float32, y float32) *Vector2 {
 
 func NewVector2Inf(sign int) *Vector2 {
 	return &Vector2{
-		X: math.Inf(sign),
-		Y: math.Inf(sign),
+		X: float32(nativeMath.Inf(sign)),
+		Y: float32(nativeMath.Inf(sign)),
 	}
 }
 
@@ -143,21 +143,21 @@ func (vec *Vector2) ApplyMatrix3(m *Matrix3) {
 }
 
 func (vec *Vector2) Min(v *Vector2) {
-	vec.X = math.Min(vec.X, v.X)
-	vec.Y = math.Min(vec.Y, v.Y)
+	vec.X = Min(vec.X, v.X)
+	vec.Y = Min(vec.Y, v.Y)
 }
 
 func (vec *Vector2) Max(v *Vector2) {
-	vec.X = math.Max(vec.X, v.X)
-	vec.Y = math.Max(vec.Y, v.Y)
+	vec.X = Max(vec.X, v.X)
+	vec.Y = Max(vec.Y, v.Y)
 }
 
 /*
  Clamps the value to be between min and max.
  */
 func (vec *Vector2) Clamp(min *Vector2, max *Vector2) {
-	vec.X = math.Max(min.X, math.Min(max.X, vec.X))
-	vec.Y = math.Max(min.Y, math.Min(max.Y, vec.Y))
+	vec.X = Max(min.X, Min(max.X, vec.X))
+	vec.Y = Max(min.Y, Min(max.Y, vec.Y))
 }
 
 func (vec *Vector2) ClampScalar(min float32, max float32) {
@@ -175,35 +175,35 @@ func (vec *Vector2) ClampLength(min float32, max float32) {
 	}
 
 	vec.DivideScalar(div)
-	vec.MultiplyScalar(math.Max(min, math.Min(max, length)))
+	vec.MultiplyScalar(Max(min, Min(max, length)))
 }
 
 func (vec *Vector2) Floor() {
-	vec.X = math.Floor(vec.X)
-	vec.Y = math.Floor(vec.Y)
+	vec.X = Floor(vec.X)
+	vec.Y = Floor(vec.Y)
 }
 
 func (vec *Vector2) Ceil() {
-	vec.X = math.Ceil(vec.X)
-	vec.Y = math.Ceil(vec.Y)
+	vec.X = Ceil(vec.X)
+	vec.Y = Ceil(vec.Y)
 }
 
 func (vec *Vector2) Round() {
-	vec.X = math.Round(vec.X)
-	vec.Y = math.Round(vec.Y)
+	vec.X = Round(vec.X)
+	vec.Y = Round(vec.Y)
 }
 
 func (vec *Vector2) RoundToZero() {
 	if vec.X < 0 {
-		vec.X = math.Ceil(vec.X)
+		vec.X = Ceil(vec.X)
 	} else {
-		vec.X = math.Floor(vec.X)
+		vec.X = Floor(vec.X)
 	}
 
 	if vec.Y < 0 {
-		vec.Y = math.Ceil(vec.Y)
+		vec.Y = Ceil(vec.Y)
 	} else {
-		vec.Y = math.Floor(vec.Y)
+		vec.Y = Floor(vec.Y)
 	}
 }
 
@@ -225,7 +225,7 @@ func (vec *Vector2) GetLengthSq() float32 {
 }
 
 func (vec *Vector2) GetLength() float32 {
-	return math.Sqrt(vec.X*vec.X + vec.Y*vec.Y)
+	return Sqrt(vec.X*vec.X + vec.Y*vec.Y)
 }
 
 func (vec *Vector2) SetLength(length float32) {
@@ -234,7 +234,7 @@ func (vec *Vector2) SetLength(length float32) {
 }
 
 func (vec *Vector2) GetManhattanLength() float32 {
-	return math.Abs(vec.X) + math.Abs(vec.Y)
+	return Abs(vec.X) + Abs(vec.Y)
 }
 
 func (vec *Vector2) Normalize() {
@@ -246,17 +246,17 @@ func (vec *Vector2) Normalize() {
 }
 
 func (vec *Vector2) GetAngle() float32 {
-	angle := math.Atan2(vec.Y, vec.X)
+	angle := Atan2(vec.Y, vec.X)
 
 	if angle < 0 {
-		angle += 2 * math.Pi
+		angle += 2 * Pi
 	}
 
 	return angle
 }
 
 func (vec *Vector2) GetDistanceTo(v *Vector2) float32 {
-	return math.Sqrt(vec.GetDistanceToSquared(v))
+	return Sqrt(vec.GetDistanceToSquared(v))
 }
 
 func (vec *Vector2) GetDistanceToSquared(v *Vector2) float32 {
@@ -266,7 +266,7 @@ func (vec *Vector2) GetDistanceToSquared(v *Vector2) float32 {
 }
 
 func (vec *Vector2) GetManhattanDistanceTo(v *Vector2) float32 {
-	return math.Abs(vec.X-v.X) + math.Abs(vec.Y-v.Y)
+	return Abs(vec.X-v.X) + Abs(vec.Y-v.Y)
 }
 
 func (vec *Vector2) Lerp(v *Vector2, alpha float32) {
@@ -285,8 +285,8 @@ func (vec *Vector2) Equals(v *Vector2) bool {
 }
 
 func (vec *Vector2) RotateAround(center *Vector2, angle float32) {
-	c := math.Cos(angle)
-	s := math.Sin(angle)
+	c := Cos(angle)
+	s := Sin(angle)
 
 	x := vec.X - center.X
 	y := vec.Y - center.Y

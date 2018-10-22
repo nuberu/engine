@@ -1,8 +1,7 @@
 package math
 
 import (
-	"github.com/tokkenno/seed/event"
-	"math"
+	"github.com/tokkenno/seed/core/event"
 )
 
 type EulerOrder int
@@ -107,57 +106,57 @@ func (eu *Euler) Set(x float32, y float32, z float32, order EulerOrder) {
 
 func (eu *Euler) SetFromRotationMatrixAndOrder(ma *Matrix4, order EulerOrder, update bool) {
 	if order == EulerOrderXYZ {
-		eu.y = math.Asin(Clamp(ma.elements[8 ], - 1, 1))
-		if math.Abs(ma.elements[8 ]) < 0.99999 {
-			eu.x = math.Atan2(- ma.elements[9 ], ma.elements[10])
-			eu.z = math.Atan2(- ma.elements[4 ], ma.elements[0 ])
+		eu.y = Asin(Clamp(ma.elements[8 ], - 1, 1))
+		if Abs(ma.elements[8 ]) < 0.99999 {
+			eu.x = Atan2(- ma.elements[9 ], ma.elements[10])
+			eu.z = Atan2(- ma.elements[4 ], ma.elements[0 ])
 		} else {
-			eu.x = math.Atan2(ma.elements[6 ], ma.elements[5 ])
+			eu.x = Atan2(ma.elements[6 ], ma.elements[5 ])
 			eu.z = 0
 		}
 	} else if order == EulerOrderYXZ {
-		eu.x = math.Asin(-Clamp(ma.elements[9 ], - 1, 1))
-		if math.Abs(ma.elements[9 ]) < 0.99999 {
-			eu.y = math.Atan2(ma.elements[8 ], ma.elements[10])
-			eu.z = math.Atan2(ma.elements[1 ], ma.elements[5 ])
+		eu.x = Asin(-Clamp(ma.elements[9 ], - 1, 1))
+		if Abs(ma.elements[9 ]) < 0.99999 {
+			eu.y = Atan2(ma.elements[8 ], ma.elements[10])
+			eu.z = Atan2(ma.elements[1 ], ma.elements[5 ])
 		} else {
-			eu.y = math.Atan2(- ma.elements[2 ], ma.elements[0 ])
+			eu.y = Atan2(- ma.elements[2 ], ma.elements[0 ])
 			eu.z = 0
 		}
 	} else if order == EulerOrderZXY {
-		eu.x = math.Asin(Clamp(ma.elements[6 ], - 1, 1))
-		if math.Abs(ma.elements[6 ]) < 0.99999 {
-			eu.y = math.Atan2(- ma.elements[2 ], ma.elements[10])
-			eu.z = math.Atan2(- ma.elements[4 ], ma.elements[5 ])
+		eu.x = Asin(Clamp(ma.elements[6 ], - 1, 1))
+		if Abs(ma.elements[6 ]) < 0.99999 {
+			eu.y = Atan2(- ma.elements[2 ], ma.elements[10])
+			eu.z = Atan2(- ma.elements[4 ], ma.elements[5 ])
 		} else {
 			eu.y = 0
-			eu.z = math.Atan2(ma.elements[1 ], ma.elements[0 ])
+			eu.z = Atan2(ma.elements[1 ], ma.elements[0 ])
 		}
 	} else if order == EulerOrderZYX {
-		eu.y = math.Asin(-Clamp(ma.elements[2 ], - 1, 1))
-		if math.Abs(ma.elements[2 ]) < 0.99999 {
-			eu.x = math.Atan2(ma.elements[6 ], ma.elements[10])
-			eu.z = math.Atan2(ma.elements[1 ], ma.elements[0 ])
+		eu.y = Asin(-Clamp(ma.elements[2 ], - 1, 1))
+		if Abs(ma.elements[2 ]) < 0.99999 {
+			eu.x = Atan2(ma.elements[6 ], ma.elements[10])
+			eu.z = Atan2(ma.elements[1 ], ma.elements[0 ])
 		} else {
 			eu.x = 0
-			eu.z = math.Atan2(- ma.elements[4 ], ma.elements[5 ])
+			eu.z = Atan2(- ma.elements[4 ], ma.elements[5 ])
 		}
 	} else if order == EulerOrderYZX {
-		eu.z = math.Asin(Clamp(ma.elements[1 ], - 1, 1))
-		if math.Abs(ma.elements[1 ]) < 0.99999 {
-			eu.x = math.Atan2(- ma.elements[9 ], ma.elements[5 ])
-			eu.y = math.Atan2(- ma.elements[2 ], ma.elements[0 ])
+		eu.z = Asin(Clamp(ma.elements[1 ], - 1, 1))
+		if Abs(ma.elements[1 ]) < 0.99999 {
+			eu.x = Atan2(- ma.elements[9 ], ma.elements[5 ])
+			eu.y = Atan2(- ma.elements[2 ], ma.elements[0 ])
 		} else {
 			eu.x = 0
-			eu.y = math.Atan2(ma.elements[8 ], ma.elements[10])
+			eu.y = Atan2(ma.elements[8 ], ma.elements[10])
 		}
 	} else if order == EulerOrderXZY {
-		eu.z = math.Asin(-Clamp(ma.elements[4 ], - 1, 1))
-		if math.Abs(ma.elements[4 ]) < 0.99999 {
-			eu.x = math.Atan2(ma.elements[6 ], ma.elements[5 ])
-			eu.y = math.Atan2(ma.elements[8 ], ma.elements[0 ])
+		eu.z = Asin(-Clamp(ma.elements[4 ], - 1, 1))
+		if Abs(ma.elements[4 ]) < 0.99999 {
+			eu.x = Atan2(ma.elements[6 ], ma.elements[5 ])
+			eu.y = Atan2(ma.elements[8 ], ma.elements[0 ])
 		} else {
-			eu.x = math.Atan2(- ma.elements[9 ], ma.elements[10])
+			eu.x = Atan2(- ma.elements[9 ], ma.elements[10])
 			eu.y = 0
 		}
 	}

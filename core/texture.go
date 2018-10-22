@@ -17,7 +17,7 @@ type Texture struct {
 	GenerateMipmaps bool
 }
 
-func NewTexture(image *Image, mapping constant.MappingMode, wrapS constant.Wrapping, wrapT constant.Wrapping,
+func NewTexture(image *Image, mapping constant.Mapping, wrapS constant.Wrapping, wrapT constant.Wrapping,
 	magFilter constant.MagFilter, minFilter constant.MinFilter, format constant.Format, ttype constant.Type, anisotropy uint, encoding constant.Encoding) *Texture {
 	return nil
 }

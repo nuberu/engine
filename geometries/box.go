@@ -8,7 +8,7 @@ import (
 )
 
 type Box struct {
-	geometry.Basic
+	geometry.Geometry
 
 	width          float32
 	height         float32

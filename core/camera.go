@@ -1,12 +1,11 @@
-package cameras
+package core
 
 import (
-	"github.com/tokkenno/seed/core"
 	"github.com/tokkenno/seed/math"
 )
 
 type Camera struct {
-	core.Object3
+	Object3
 
 	matrixWorldInverse      math.Matrix4
 	projectionMatrix        math.Matrix4
@@ -15,7 +14,7 @@ type Camera struct {
 
 func newCamera() Camera {
 	cam := Camera{
-		Object3: *core.NewObject(),
+		Object3: *NewObject(),
 		matrixWorldInverse: *math.NewDefaultMatrix4(),
 		projectionMatrix: *math.NewDefaultMatrix4(),
 		projectionMatrixInverse: *math.NewDefaultMatrix4(),
@@ -52,7 +51,7 @@ func (camera *Camera) Clone() *Camera {
 
 func (camera *Camera) UpdateMatrixWorld(force bool) {
 	camera.Object3.UpdateMatrixWorld(force)
-	camera.matrixWorldInverse.GetInverse(camera.GetMatrixWorld(), false)
+	camera.matrixWorldInverse.SetInverseOf(camera.GetMatrixWorld(), false)
 }
 
 func (camera *Camera) GetWorldDirection(target *math.Vector3) *math.Vector3 {

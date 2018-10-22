@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/logger"
-	"math"
+	"github.com/tokkenno/seed/core/types"
 )
 
 type Matrix4 struct {
@@ -46,9 +46,9 @@ func NewMatrix4Translation(x float32, y float32, z float32) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationX(theta float32) *Matrix4 {
-	c := math.Cos(theta)
-	s := math.Sin(theta)
+func NewMatrix4RotationX(angle types.Angle) *Matrix4 {
+	c := Cos(float32(angle))
+	s := Sin(float32(angle))
 
 	return &Matrix4{
 		elements: [16]float32{
@@ -60,9 +60,9 @@ func NewMatrix4RotationX(theta float32) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationY(theta float32) *Matrix4 {
-	c := math.Cos(theta)
-	s := math.Sin(theta)
+func NewMatrix4RotationY(angle types.Angle) *Matrix4 {
+	c := Cos(float32(angle))
+	s := Sin(float32(angle))
 
 	return &Matrix4{
 		elements: [16]float32{
@@ -74,9 +74,9 @@ func NewMatrix4RotationY(theta float32) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationZ(theta float32) *Matrix4 {
-	c := math.Cos(theta)
-	s := math.Sin(theta)
+func NewMatrix4RotationZ(angle types.Angle) *Matrix4 {
+	c := Cos(float32(angle))
+	s := Sin(float32(angle))
 
 	return &Matrix4{
 		elements: [16]float32{
@@ -88,9 +88,9 @@ func NewMatrix4RotationZ(theta float32) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationAxis(axis *Vector3, angle float32) *Matrix4 {
-	c := math.Cos(angle)
-	s := math.Sin(angle)
+func NewMatrix4RotationAxis(axis *Vector3, angle types.Angle) *Matrix4 {
+	c := Cos(float32(angle))
+	s := Sin(float32(angle))
 	t := 1 - c
 	tx := t * axis.X
 	ty := t * axis.Y
@@ -277,13 +277,13 @@ func (matrix *Matrix4) MakeRotationFromEuler(euler *Euler) {
 	y := euler.y
 	z := euler.z
 
-	a := math.Cos(x)
-	b := math.Sin(x)
-	c := math.Cos(y)
+	a := Cos(x)
+	b := Sin(x)
+	c := Cos(y)
 
-	d := math.Sin(y)
-	e := math.Cos(z)
-	f := math.Sin(z)
+	d := Sin(y)
+	e := Cos(z)
+	f := Sin(z)
 
 	if euler.order == EulerOrderXYZ {
 		ae := a * e
@@ -424,7 +424,7 @@ func (matrix *Matrix4) LookAt(eye *Vector3, target *Vector3, up *Vector3) {
 
 	if x.GetLengthSq() == 0 {
 		// up and z are parallel
-		if math.Abs(up.Z) == 1 {
+		if Abs(up.Z) == 1 {
 			z.X += 0.0001
 		} else {
 			z.Z += 0.0001
@@ -559,11 +559,11 @@ func (matrix *Matrix4) SetPosition(v *Vector3) {
 }
 
 func (matrix *Matrix4) Inverse() error {
-	return matrix.GetInverse(matrix.Clone(), true)
+	return matrix.SetInverseOf(matrix.Clone(), true)
 }
 
 // Get the inverse of the matrix [m] and set its value to the current matrix
-func (matrix *Matrix4) GetInverse(m *Matrix4, errorOnDegenerate bool) error {
+func (matrix *Matrix4) SetInverseOf(m *Matrix4, errorOnDegenerate bool) error {
 	t11 := m.elements[9 ]*m.elements[14]*m.elements[7 ] - m.elements[13]*m.elements[10]*m.elements[7 ] + m.elements[13]*m.elements[6 ]*m.elements[11] - m.elements[5 ]*m.elements[14]*m.elements[11] - m.elements[9 ]*m.elements[6 ]*m.elements[15] + m.elements[5 ]*m.elements[10]*m.elements[15]
 	t12 := m.elements[12]*m.elements[10]*m.elements[7 ] - m.elements[8 ]*m.elements[14]*m.elements[7 ] - m.elements[12]*m.elements[6 ]*m.elements[11] + m.elements[4 ]*m.elements[14]*m.elements[11] + m.elements[8 ]*m.elements[6 ]*m.elements[15] - m.elements[4 ]*m.elements[10]*m.elements[15]
 	t13 := m.elements[8 ]*m.elements[13]*m.elements[7 ] - m.elements[12]*m.elements[9 ]*m.elements[7 ] + m.elements[12]*m.elements[5 ]*m.elements[11] - m.elements[4 ]*m.elements[13]*m.elements[11] - m.elements[8 ]*m.elements[5 ]*m.elements[15] + m.elements[4 ]*m.elements[9 ]*m.elements[15]
@@ -625,7 +625,7 @@ func (matrix *Matrix4) GetMaxScaleOnAxis() float32 {
 	scaleXSq := matrix.elements[0 ]*matrix.elements[0 ] + matrix.elements[1 ]*matrix.elements[1 ] + matrix.elements[2 ]*matrix.elements[2 ]
 	scaleYSq := matrix.elements[4 ]*matrix.elements[4 ] + matrix.elements[5 ]*matrix.elements[5 ] + matrix.elements[6 ]*matrix.elements[6 ]
 	scaleZSq := matrix.elements[8 ]*matrix.elements[8 ] + matrix.elements[9 ]*matrix.elements[9 ] + matrix.elements[10]*matrix.elements[10]
-	return math.Sqrt(math.Max(scaleXSq, math.Max(scaleYSq, scaleZSq)))
+	return Sqrt(Max(scaleXSq, Max(scaleYSq, scaleZSq)))
 }
 
 func (matrix *Matrix4) Compose(position *Vector3, q *Quaternion, scale *Vector3) {
@@ -718,9 +718,9 @@ func (matrix *Matrix4) Equals(ma *Matrix4) bool {
 }
 
 func (matrix *Matrix4) EqualsRound(ma *Matrix4, decimals float32) bool {
-	mul := math.Pow(10, decimals)
+	mul := Pow(10, decimals)
 	for ind := range matrix.elements {
-		if math.Round(mul*matrix.elements[ind])/mul != math.Round(mul*ma.elements[ind])/mul {
+		if Round(mul*matrix.elements[ind])/mul != Round(mul*ma.elements[ind])/mul {
 			return false
 		}
 	}

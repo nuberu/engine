@@ -1,14 +1,17 @@
 package lights
 
-import "github.com/tokkenno/seed/core/math"
+import (
+	"github.com/tokkenno/seed/core"
+	"github.com/tokkenno/seed/math"
+)
 
 type Hemisphere struct {
-	Light
+	core.Light
 }
 
 func NewHemisphere(color math.Color, intensity float32) *Hemisphere {
 	light := Hemisphere{
-		Light: *NewLight(color, intensity),
+		Light: *core.NewLight(color, intensity),
 	}
 
 	return &light

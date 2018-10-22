@@ -1,14 +1,17 @@
 package lights
 
-import "github.com/tokkenno/seed/core/math"
+import (
+	"github.com/tokkenno/seed/core"
+	"github.com/tokkenno/seed/math"
+)
 
 type Spot struct {
-	Light
+	core.Light
 }
 
 func NewSpot(color math.Color, intensity float32) *Spot {
 	light := Spot{
-		Light: *NewLight(color, intensity),
+		Light: *core.NewLight(color, intensity),
 	}
 
 	return &light

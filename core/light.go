@@ -1,12 +1,11 @@
 package core
 
 import (
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/core/math"
+	"github.com/tokkenno/seed/math"
 )
 
 type Light struct {
-	core.Object3
+	Object3
 
 	color     *math.Color
 	intensity float32
