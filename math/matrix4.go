@@ -149,22 +149,9 @@ func NewMatrix4Perspective(left, right, top, bottom, near, far float32) *Matrix4
 
 // TODO: Move to camera (check uses)
 func NewMatrix4Orthographic(left, right, top, bottom, near, far float32) *Matrix4 {
-	w := 1.0 / (right - left)
-	h := 1.0 / (top - bottom)
-	p := 1.0 / (far - near)
-
-	x := (right + left) * w
-	y := (top + bottom) * h
-	z := (far + near) * p
-
-	return &Matrix4{
-		elements: [16]float32{
-			2 * w, 0, 0, 0,
-			0, 2 * h, 0, 0,
-			0, 0, -2 * p, 0,
-			-x, -y, -z, 1,
-		},
-	}
+	ma := NewDefaultMatrix4()
+	ma.MakeOrthographic(left, right, top, bottom, near, far)
+	return ma
 }
 
 func NewMatrix4FromArray(arr []float32, offset int) *Matrix4 {
@@ -237,6 +224,23 @@ func (matrix *Matrix4) MakeBasis(xAxis *Vector4, yAxis *Vector4, zAxis *Vector4)
 		xAxis.Z, yAxis.Z, zAxis.Z, 0,
 		0, 0, 0, 0,
 	)
+}
+
+func (matrix *Matrix4) MakeOrthographic(left, right, top, bottom, near, far float32) {
+	w := 1.0 / (right - left)
+	h := 1.0 / (top - bottom)
+	p := 1.0 / (far - near)
+
+	x := (right + left) * w
+	y := (top + bottom) * h
+	z := (far + near) * p
+
+	matrix.elements = [16]float32{
+		2 * w, 0, 0, 0,
+		0, 2 * h, 0, 0,
+		0, 0, -2 * p, 0,
+		-x, -y, -z, 1,
+	}
 }
 
 func (matrix *Matrix4) ExtractRotation(m *Matrix4) {

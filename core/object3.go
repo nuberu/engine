@@ -95,6 +95,10 @@ func (obj *Object3) IsCamera() bool {
 	return false
 }
 
+func (obj *Object3) IsVisible() bool {
+	return obj.Visible
+}
+
 func (obj *Object3) OnBeforeRender() *event.Handler {
 	return obj.beforeRenderEvent.GetHandler()
 }
@@ -250,6 +254,12 @@ func (obj *Object3) RemoveAll(objects []*Object3) {
 	for _, object := range objects {
 		obj.Remove(object)
 	}
+}
+
+func (obj *Object3) GetChildren() []*Object3 {
+	castChildren := make([]*Object3, len(obj.children))
+	copy(castChildren, obj.children)
+	return castChildren
 }
 
 func (obj *Object3) GetChildrenById(id Id) *Object3 {

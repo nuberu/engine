@@ -35,6 +35,10 @@ func (camera *Camera) GetProjectionMatrix() *math.Matrix4 {
 	return &camera.projectionMatrix
 }
 
+func (camera *Camera) GetProjectionMatrixInverse() *math.Matrix4 {
+	return &camera.projectionMatrixInverse
+}
+
 func (camera *Camera) Copy(source *Camera, recursive bool) {
 	camera.Object3.Copy(&source.Object3, recursive)
 

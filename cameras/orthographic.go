@@ -1,6 +1,9 @@
 package cameras
 
-import "github.com/tokkenno/seed/core"
+import (
+	"github.com/tokkenno/seed/core"
+	"github.com/tokkenno/seed/math"
+)
 
 type orthographicView struct {
 	enabled    bool
@@ -120,5 +123,16 @@ func (camera *Orthographic) UpdateProjectionMatrix() {
 
 	camera.GetProjectionMatrix().MakeOrthographic(left, right, top, bottom, camera.near, camera.far)
 
-	camera.GetProjectionMatrixInverse().GetInverse(camera.projectionMatrix)
+	camera.GetProjectionMatrixInverse().SetInverseOf(camera.GetProjectionMatrix(), false)
+}
+
+func (camera *Orthographic) GetRay(coordinates *math.Vector2) *math.Ray {
+	origin := math.NewVector3(coordinates.X, coordinates.Y,( camera.near + camera.far ) / ( camera.near - camera.far ))
+	math.UnProject(origin, &camera.Camera)
+
+	direction := math.NewVector3(0, 0, -1)
+	direction.TransformDirection(camera.GetMatrixWorld())
+
+	return math.NewRay(origin, direction)
+
 }
