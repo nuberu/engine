@@ -256,6 +256,10 @@ func (obj *Object3) RemoveAll(objects []*Object3) {
 	}
 }
 
+func (obj *Object3) GetParent() *Object3 {
+	return obj.parent
+}
+
 func (obj *Object3) GetChildren() []*Object3 {
 	castChildren := make([]*Object3, len(obj.children))
 	copy(castChildren, obj.children)

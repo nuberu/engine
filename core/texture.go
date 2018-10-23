@@ -5,7 +5,7 @@ import (
 	"github.com/tokkenno/seed/textures"
 )
 
-type Options struct {
+type TextureOptions struct {
 	WrapS       constant.Wrapping
 	WrapT       constant.Wrapping
 	MagFilter   constant.MagFilter

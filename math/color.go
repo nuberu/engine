@@ -1,9 +1,13 @@
 package math
 
-import "image/color"
+import (
+	"image/color"
+	"math"
+)
 
 var (
-	ColorBlack = Color{R: 0, G: 0, B: 0, A: 0xffffffff}
+	ColorBlack = Color{R: 0, G: 0, B: 0, A: math.MaxUint16}
+	ColorWhite = Color{R: math.MaxUint16, G: math.MaxUint16, B: math.MaxUint16, A: math.MaxUint16}
 )
 
 type Color struct {

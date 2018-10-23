@@ -2,8 +2,12 @@ package objects
 
 import (
 	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/render/draw"
+	"github.com/tokkenno/seed/core/render/draw"
 )
+
+type meshRaycast struct {
+
+}
 
 type Mesh struct {
 	core.Object3

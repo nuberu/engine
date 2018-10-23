@@ -54,3 +54,35 @@ func (plane *Plane) SetFromCoplanarPoints(a *Vector3, b *Vector3, c *Vector3) {
 
 	plane.SetFromNormalAndCoplanarPoint(v1, a)
 }
+
+func (plane *Plane) GetCoplanarPoint() *Vector3 {
+	target := NewDefaultVector3()
+	plane.CopyCoplanarPoint(target)
+	return target
+}
+
+func (plane *Plane) CopyCoplanarPoint(target *Vector3) {
+	target.Copy(plane.normal)
+	target.MultiplyScalar(-plane.constant)
+}
+
+func (plane *Plane) ApplyMatrix4(matrix *Matrix4) {
+	m3 := NewDefaultMatrix3()
+	m3.SetNormalMatrix(matrix)
+
+	plane.ApplyMatrix4AndNormal(matrix, m3)
+}
+
+func (plane *Plane) ApplyMatrix4AndNormal(matrix *Matrix4, normalMatrix *Matrix3) {
+	v1 := NewDefaultVector3()
+
+	plane.CopyCoplanarPoint(v1)
+	referencePoint := v1.Clone()
+	referencePoint.ApplyMatrix4(matrix)
+
+	normal := plane.GetNormal()
+	normal.ApplyMatrix3(normalMatrix)
+	normal.Normalize()
+
+	plane.constant = - referencePoint.Dot(normal)
+}
