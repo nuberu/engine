@@ -66,3 +66,16 @@ func (camera *Camera) GetWorldDirection(target *math.Vector3) *math.Vector3 {
 	target.Normalize()
 	return target
 }
+
+func Project(vec *math.Vector3, camera *Camera) {
+	vec.ApplyMatrix4(camera.GetMatrixWorldInverse())
+	vec.ApplyMatrix4(camera.GetProjectionMatrix())
+}
+
+func UnProject(vec *math.Vector3, camera *Camera) {
+	matrix := math.NewDefaultMatrix4()
+	matrix.SetIdentity()
+	matrix.SetInverseOf(camera.GetProjectionMatrix(), false)
+	vec.ApplyMatrix4(matrix)
+	vec.ApplyMatrix4(camera.GetMatrixWorld())
+}

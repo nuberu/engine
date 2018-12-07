@@ -91,5 +91,5 @@ func (ray *Ray) GetDistanceSqToPoint(point *Vector3) float32 {
 }
 
 func (ray *Ray) GetDistanceSqToSegment(v0 *Vector3, v1 *Vector3) float32 {
-
+	return 0 // TODO
 }

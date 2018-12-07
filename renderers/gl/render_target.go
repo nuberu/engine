@@ -1,9 +1,9 @@
-package webgl
+package gl
 
 import (
 	"github.com/tokkenno/seed/core"
 	"github.com/tokkenno/seed/core/constant"
-	"github.com/tokkenno/seed/core/event"
+	"github.com/tokkenno/seed/event"
 	"github.com/tokkenno/seed/math"
 )
 

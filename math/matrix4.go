@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/logger"
-	"github.com/tokkenno/seed/core/types"
 )
 
 type Matrix4 struct {
@@ -46,7 +45,7 @@ func NewMatrix4Translation(x float32, y float32, z float32) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationX(angle types.Angle) *Matrix4 {
+func NewMatrix4RotationX(angle Angle) *Matrix4 {
 	c := Cos(float32(angle))
 	s := Sin(float32(angle))
 
@@ -60,7 +59,7 @@ func NewMatrix4RotationX(angle types.Angle) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationY(angle types.Angle) *Matrix4 {
+func NewMatrix4RotationY(angle Angle) *Matrix4 {
 	c := Cos(float32(angle))
 	s := Sin(float32(angle))
 
@@ -74,7 +73,7 @@ func NewMatrix4RotationY(angle types.Angle) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationZ(angle types.Angle) *Matrix4 {
+func NewMatrix4RotationZ(angle Angle) *Matrix4 {
 	c := Cos(float32(angle))
 	s := Sin(float32(angle))
 
@@ -88,7 +87,7 @@ func NewMatrix4RotationZ(angle types.Angle) *Matrix4 {
 	}
 }
 
-func NewMatrix4RotationAxis(axis *Vector3, angle types.Angle) *Matrix4 {
+func NewMatrix4RotationAxis(axis *Vector3, angle Angle) *Matrix4 {
 	c := Cos(float32(angle))
 	s := Sin(float32(angle))
 	t := 1 - c

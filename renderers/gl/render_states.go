@@ -1,4 +1,4 @@
-package webgl
+package gl
 
 import (
 	"github.com/tokkenno/seed/core"

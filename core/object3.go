@@ -2,7 +2,7 @@ package core
 
 import (
 	"github.com/tokkenno/seed/core/types"
-	"github.com/tokkenno/seed/core/event"
+	"github.com/tokkenno/seed/event"
 	"github.com/tokkenno/seed/math"
 )
 

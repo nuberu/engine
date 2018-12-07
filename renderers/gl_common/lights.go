@@ -1,4 +1,4 @@
-package gl
+package gl_common
 
 import (
 	"github.com/tokkenno/seed/core"

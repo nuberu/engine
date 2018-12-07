@@ -1,12 +1,12 @@
-package webgl
+package renderer
 
 import (
 	"errors"
 	"github.com/tokkenno/seed/core"
 	"github.com/tokkenno/seed/core/constant"
-	"github.com/tokkenno/seed/math"
 	"github.com/tokkenno/seed/core/render"
-	"github.com/tokkenno/seed/renderers/gles/gl"
+	"github.com/tokkenno/seed/math"
+	"github.com/tokkenno/seed/renderers/gl"
 	"github.com/tokkenno/seed/renderers/webgl/dom"
 )
 

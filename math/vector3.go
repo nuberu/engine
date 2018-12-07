@@ -1,7 +1,6 @@
 package math
 
 import (
-	"github.com/tokkenno/seed/core/types"
 	nativeMath "math"
 )
 
@@ -188,7 +187,7 @@ func (vec *Vector3) ApplyEuler(euler *Euler) {
 	vec.ApplyQuaternion(quaternion)
 }
 
-func (vec *Vector3) ApplyAxisAngle(axis *Vector3, angle types.Angle) {
+func (vec *Vector3) ApplyAxisAngle(axis *Vector3, angle Angle) {
 	quaternion := NewDefaultQuaternion()
 	quaternion.SetFromAxisAngle(axis, angle)
 	vec.ApplyQuaternion(quaternion)

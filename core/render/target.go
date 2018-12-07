@@ -1,4 +1,4 @@
 package render
 
-type Target struct {
+type Target interface {
 }

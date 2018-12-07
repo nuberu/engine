@@ -1,8 +1,7 @@
 package math
 
 import (
-	"github.com/tokkenno/seed/core/types"
-	"github.com/tokkenno/seed/core/event"
+	"github.com/tokkenno/seed/event"
 	nativeMath "math"
 )
 
@@ -162,7 +161,7 @@ func (qua *Quaternion) SetFromEuler(euler *Euler, update bool) {
 	}
 }
 
-func (qua *Quaternion) SetFromAxisAngle(axis *Vector3, angle types.Angle) {
+func (qua *Quaternion) SetFromAxisAngle(axis *Vector3, angle Angle) {
 	halfAngle := angle / 2
 	s := Sin(float32(halfAngle))
 
