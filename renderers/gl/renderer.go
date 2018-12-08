@@ -25,5 +25,5 @@ func (renderer *Renderer) Init() error {
 }
 
 func (renderer *Renderer) NextFrame(loop func()) {
-
+	loop()
 }

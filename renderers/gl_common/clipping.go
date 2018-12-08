@@ -1,7 +1,6 @@
 package gl_common
 
 import (
-	"github.com/tokkenno/seed/cameras"
 	"github.com/tokkenno/seed/core"
 	"github.com/tokkenno/seed/math"
 )
@@ -24,7 +23,7 @@ type Clipping struct {
 	numIntersection uint64
 }
 
-func (scope *Clipping) Init(planes []*math.Plane, enableLocalClipping bool, camera *cameras.Camera) {
+func (scope *Clipping) Init(planes []*math.Plane, enableLocalClipping bool, camera *core.Camera) {
 
 }
 
@@ -39,7 +38,7 @@ func (scope *Clipping) EndShadows() {
 }
 
 func (scope *Clipping) resetGlobalState() {
-	if scope.uniform.Value != scope.globalState {
+	if &scope.uniform.Value != &scope.globalState {
 		scope.uniform.Value = scope.globalState
 		scope.uniform.NeedsUpdate = scope.numGlobalPlanes > 0
 	}
@@ -72,9 +71,10 @@ func (scope *Clipping) projectPlanes(planes []*math.Plane, camera *core.Camera, 
 
 			for i := 0; i < nPlanes; i++ {
 				scope.plane = planes[i].Clone()
-				scope.plane.ApplyMatrix4(viewMatrix, scope.viewNormalMatrix)
+				scope.plane.ApplyMatrix4AndNormal(viewMatrix, scope.viewNormalMatrix)
 
-				dstArray = append(dstArray, scope.plane.GetNormal().ToArray()[:]...)
+				normal := scope.plane.GetNormal().ToArray()
+				dstArray = append(dstArray, normal[:]...)
 				dstArray[i+4+3] = scope.plane.GetConstant()
 			}
 		}

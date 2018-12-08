@@ -1,7 +1,6 @@
 package core
 
 import (
-	"github.com/tokkenno/seed/core/types"
 	"github.com/tokkenno/seed/event"
 	"github.com/tokkenno/seed/math"
 )
@@ -124,7 +123,7 @@ func (obj *Object3) ApplyQuaternion(q *math.Quaternion) {
 	obj.quaternion.PreMultiply(q)
 }
 
-func (obj *Object3) SetRotationFromAxisAngle(axis *math.Vector3, angle types.Angle) {
+func (obj *Object3) SetRotationFromAxisAngle(axis *math.Vector3, angle math.Angle) {
 	obj.quaternion.SetFromAxisAngle(axis, angle)
 }
 
@@ -140,27 +139,27 @@ func (obj *Object3) SetRotationFromQuaternion(q *math.Quaternion) {
 	obj.quaternion.Copy(q)
 }
 
-func (obj *Object3) RotateOnAxis(axis *math.Vector3, angle types.Angle) {
+func (obj *Object3) RotateOnAxis(axis *math.Vector3, angle math.Angle) {
 	q1 := math.NewDefaultQuaternion()
 	q1.SetFromAxisAngle(axis, angle)
 	obj.quaternion.Multiply(q1)
 }
 
-func (obj *Object3) RotateOnWorldAxis(axis *math.Vector3, angle types.Angle) {
+func (obj *Object3) RotateOnWorldAxis(axis *math.Vector3, angle math.Angle) {
 	q1 := math.NewDefaultQuaternion()
 	q1.SetFromAxisAngle(axis, angle)
 	obj.quaternion.PreMultiply(q1)
 }
 
-func (obj *Object3) RotateX(angle types.Angle) {
+func (obj *Object3) RotateX(angle math.Angle) {
 	obj.RotateOnAxis(math.NewVector3(1, 0, 0), angle)
 }
 
-func (obj *Object3) RotateY(angle types.Angle) {
+func (obj *Object3) RotateY(angle math.Angle) {
 	obj.RotateOnAxis(math.NewVector3(0, 1, 0), angle)
 }
 
-func (obj *Object3) RotateZ(angle types.Angle) {
+func (obj *Object3) RotateZ(angle math.Angle) {
 	obj.RotateOnAxis(math.NewVector3(0, 0, 1), angle)
 }
 

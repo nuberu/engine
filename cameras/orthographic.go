@@ -128,7 +128,7 @@ func (camera *Orthographic) UpdateProjectionMatrix() {
 
 func (camera *Orthographic) GetRay(coordinates *math.Vector2) *math.Ray {
 	origin := math.NewVector3(coordinates.X, coordinates.Y,( camera.near + camera.far ) / ( camera.near - camera.far ))
-	math.UnProject(origin, &camera.Camera)
+	core.UnProject(origin, &camera.Camera)
 
 	direction := math.NewVector3(0, 0, -1)
 	direction.TransformDirection(camera.GetMatrixWorld())

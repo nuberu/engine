@@ -7,8 +7,8 @@ import (
 
 type RenderState struct {
 	lights       *gl_common.Lights
-	lightsArray  []*gl_common.Lights
-	shadowsArray []*gl_common.Lights
+	lightsArray  []*core.Light
+	shadowsArray []*core.Light
 }
 
 func NewRenderState() *RenderState {
@@ -16,11 +16,11 @@ func NewRenderState() *RenderState {
 	return state
 }
 
-func (rs *RenderState) AddLight(light *gl_common.Lights) {
+func (rs *RenderState) AddLight(light *core.Light) {
 	rs.lightsArray = append(rs.lightsArray, light)
 }
 
-func (rs *RenderState) AddShadow(shadow *gl_common.Lights) {
+func (rs *RenderState) AddShadow(shadow *core.Light) {
 	rs.shadowsArray = append(rs.shadowsArray, shadow)
 }
 

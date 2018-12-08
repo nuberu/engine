@@ -28,7 +28,8 @@ func (window *window) SetTitle(title string) {
 func NewWindow(size *math.Vector2, title string) (*window, error) {
 	window := &window{}
 
-	if err := glfw.Init(); err != nil {
+	err := glfw.Init()
+	if err != nil {
 		return nil, err
 	}
 

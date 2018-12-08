@@ -1,15 +1,14 @@
 package core
 
 import (
-	"github.com/tokkenno/seed/core/types"
 	"github.com/tokkenno/seed/math"
 )
 
 type IGeometry interface {
 	ApplyMatrix(m *math.Matrix4)
-	RotateX(a types.Angle)
-	RotateY(a types.Angle)
-	RotateZ(a types.Angle)
+	RotateX(a math.Angle)
+	RotateY(a math.Angle)
+	RotateZ(a math.Angle)
 	Translate(x, y, z float32)
 	Scale(x, y, z float32)
 	LookAt(v *math.Vector3)
@@ -77,17 +76,17 @@ func (geo *Geometry) ApplyMatrix(matrix *math.Matrix4) {
 	geo.normalsNeedUpdate = true
 }
 
-func (geo *Geometry) RotateX(angle types.Angle) {
+func (geo *Geometry) RotateX(angle math.Angle) {
 	m1 := math.NewMatrix4RotationX(angle)
 	geo.ApplyMatrix(m1)
 }
 
-func (geo *Geometry) RotateY(angle types.Angle) {
+func (geo *Geometry) RotateY(angle math.Angle) {
 	m1 := math.NewMatrix4RotationY(angle)
 	geo.ApplyMatrix(m1)
 }
 
-func (geo *Geometry) RotateZ(angle types.Angle) {
+func (geo *Geometry) RotateZ(angle math.Angle) {
 	m1 := math.NewMatrix4RotationZ(angle)
 	geo.ApplyMatrix(m1)
 }
