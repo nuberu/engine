@@ -23,7 +23,3 @@ func (renderer *Renderer) Init() error {
 
 	return nil
 }
-
-func (renderer *Renderer) NextFrame(loop func()) {
-	loop()
-}
