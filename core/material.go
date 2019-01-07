@@ -13,8 +13,8 @@ var (
 type Material struct {
 	Object3
 
-	fog                 bool
-	lights              bool
+	Fog                 bool
+	Lights              bool
 	blending            constant.Blending
 	side                constant.Side
 	flatShading         bool
@@ -49,8 +49,8 @@ type Material struct {
 func NewMaterial() *Material {
 	mat := &Material{
 		Object3:             *newObjectWithId(materialIdGenerator.Next()),
-		fog:                 true,
-		lights:              true,
+		Fog:                 true,
+		Lights:              true,
 		blending:            constant.NormalBlending,
 		side:                constant.FrontSide,
 		flatShading:         false,

@@ -3,7 +3,7 @@ package math
 import (
 	"errors"
 	"fmt"
-	"github.com/google/logger"
+	"log"
 )
 
 type Matrix4 struct {
@@ -578,7 +578,7 @@ func (matrix *Matrix4) SetInverseOf(m *Matrix4, errorOnDegenerate bool) error {
 		if errorOnDegenerate == true {
 			return errors.New(".getInverse() can't invert matrix, determinant is 0")
 		} else {
-			logger.Warning(".getInverse() can't invert matrix, determinant is 0")
+			log.Println(".getInverse() can't invert matrix, determinant is 0")
 			matrix.SetIdentity()
 			return nil
 		}
