@@ -22,14 +22,14 @@ type Capabilities struct {
 	vertexTextures bool
 	floatFragmentTextures bool
 	floatVertexTextures bool
+	webGLVersion int
 }
 
 func NewCapabilities(glContext js.Value, extensions *Extensions, settings *Settings) *Capabilities {
 	capabilities := &Capabilities{
 		glContext: glContext,
+		webGLVersion: 1, // TODO: Add support to 2
 	}
-
-	isWebGL2 := false // TODO: Add support
 
 	// Max Anisotropy
 	extension := extensions.Get("EXT_texture_filter_anisotropic")
@@ -68,7 +68,7 @@ func NewCapabilities(glContext js.Value, extensions *Extensions, settings *Setti
 	capabilities.maxFragmentUniforms = glContext.Call("getParameter", glContext.Get("MAX_FRAGMENT_UNIFORM_VECTORS")).Int()
 
 	capabilities.vertexTextures = capabilities.maxVertexTextures > 0
-	capabilities.floatFragmentTextures = isWebGL2 || extensions.Get("OES_texture_float") != js.Undefined()
+	capabilities.floatFragmentTextures = capabilities.webGLVersion > 1 || extensions.Get("OES_texture_float") != js.Undefined()
 	capabilities.floatVertexTextures = capabilities.vertexTextures && capabilities.floatFragmentTextures
 
 	return capabilities
@@ -76,6 +76,10 @@ func NewCapabilities(glContext js.Value, extensions *Extensions, settings *Setti
 
 func (cap *Capabilities) GetMaxAnisotropy() float64 {
 	return cap.maxAnisotropy
+}
+
+func (cap *Capabilities) GetWebGLVersion() int {
+	return cap.webGLVersion
 }
 
 func (cap *Capabilities) GetMaxPrecision(precision Precision) Precision {

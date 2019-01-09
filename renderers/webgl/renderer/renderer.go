@@ -7,6 +7,7 @@ import (
 	"github.com/tokkenno/seed/core/render"
 	"github.com/tokkenno/seed/math"
 	"github.com/tokkenno/seed/renderers/webgl"
+	"github.com/tokkenno/seed/renderers/webgl/program"
 	"syscall/js"
 )
 
@@ -27,7 +28,7 @@ type Renderer struct {
 	GammaInput  bool
 	GammaOutput bool
 
-	PhysicallyCorrentLights bool
+	PhysicallyCorrectLights bool
 	ToneMapping             constant.ToneMapping
 	ToneMappingExposure     float32
 	ToneMappingWhitePoint   float32
@@ -39,11 +40,13 @@ type Renderer struct {
 
 	//frameBuffer
 
+	renderStates *States
+	currentRenderState *State
 	//currentRenderTarget
 	//currentFrameBuffer
 	currentMaterialId int64
 
-	//currentGeometryProgram *GeometryProgram
+	currentGeometryProgram *program.Geometry
 
 	currentCamera *core.Camera
 	//currentArrayCamera
@@ -72,18 +75,19 @@ type Renderer struct {
 
 	vector3 *math.Vector3
 
-	contextAttributes *Settings
+	contextAttributes *webgl.Settings
 
 	extensions *webgl.Extensions
+	capabilities *webgl.Capabilities
 
 	glContext          js.Value
 	onContextLostJs    js.Callback
 	onContextRestoreJs js.Callback
 }
 
-func NewRenderer(options *Settings) (*Renderer, error) {
-	if options == nil {
-		options = DefaultSettings()
+func NewRenderer(settings *webgl.Settings) (*Renderer, error) {
+	if settings == nil {
+		settings = webgl.DefaultSettings()
 	}
 
 	canvas := js.Global().Get("document").Call("createElement", "canvas")
@@ -101,7 +105,7 @@ func NewRenderer(options *Settings) (*Renderer, error) {
 		GammaFactor:             2.0,
 		GammaInput:              false,
 		GammaOutput:             false,
-		PhysicallyCorrentLights: false,
+		PhysicallyCorrectLights: false,
 		ToneMapping:             constant.LinearToneMapping,
 		ToneMappingExposure:     1.0,
 		ToneMappingWhitePoint:   1.0,
@@ -126,7 +130,7 @@ func NewRenderer(options *Settings) (*Renderer, error) {
 		projectScreenMatrix:  math.NewDefaultMatrix4(),
 		vector3:              math.NewDefaultVector3(),
 
-		contextAttributes: options,
+		contextAttributes: settings,
 	}
 
 	// Event listeners must be registered before WebGL context is created, see Three.js #12753
@@ -144,7 +148,23 @@ func NewRenderer(options *Settings) (*Renderer, error) {
 		return nil, errors.New("WebGL context can't be created. Maybe the browser don't support then")
 	}
 
+	// InitGLContext
 	renderer.extensions = webgl.NewExtensions(renderer.glContext)
+	renderer.capabilities = webgl.NewCapabilities(renderer.glContext, renderer.extensions, settings)
+
+	if renderer.capabilities.GetWebGLVersion() < 2 {
+		renderer.extensions.Get("WEBGL_depth_texture")
+		renderer.extensions.Get("OES_texture_float")
+		renderer.extensions.Get("OES_texture_half_float")
+		renderer.extensions.Get("OES_texture_half_float_linear")
+		renderer.extensions.Get("OES_standard_derivatives")
+		renderer.extensions.Get("OES_element_index_uint")
+		renderer.extensions.Get("ANGLE_instanced_arrays")
+	}
+
+	renderer.extensions.Get("OES_texture_float_linear")
+
+	// TODO: WebGlUtils: line 265
 
 	return &renderer, nil
 }
@@ -164,9 +184,9 @@ func (renderer *Renderer) Render(scene *core.Scene, camera *core.Camera, target 
 	}
 
 	// reset caching for this frame
-	//renderer.currentGeometryProgram.geometry = nil
-	//renderer.currentGeometryProgram.program = nil
-	//renderer.currentGeometryProgram.wireFrame = false
+	renderer.currentGeometryProgram.Geometry = nil
+	renderer.currentGeometryProgram.Program = 0
+	renderer.currentGeometryProgram.WireFrame = false
 	renderer.currentMaterialId = -1
 	renderer.currentCamera = nil
 
@@ -180,8 +200,11 @@ func (renderer *Renderer) Render(scene *core.Scene, camera *core.Camera, target 
 		camera.UpdateMatrixWorld(false)
 	}
 
-	//renderer.currentRenderState = renderer.renderStates.Get(scene, camera)
-	//renderer.currentRenderState.Init()
+	renderer.currentRenderState = renderer.renderStates.Get(scene, camera)
+	renderer.currentRenderState.Restart()
+
+	// scene.onBeforeRender( _this, scene, camera, renderTarget ); Line 1065
+
 	return nil
 }
 
