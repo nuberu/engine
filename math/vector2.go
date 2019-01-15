@@ -66,9 +66,9 @@ func (vec *Vector2) SetScalar(num float32) {
 	vec.Y = num
 }
 
-func (vec *Vector2) Copy(v *Vector2) {
-	vec.X = v.X
-	vec.Y = v.Y
+func (vec *Vector2) Copy(source *Vector2) {
+	vec.X = source.X
+	vec.Y = source.Y
 }
 
 func (vec *Vector2) Clone() *Vector2 {

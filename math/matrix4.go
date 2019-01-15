@@ -202,8 +202,8 @@ func (matrix *Matrix4) Clone() *Matrix4 {
 	return &m
 }
 
-func (matrix *Matrix4) Copy(other *Matrix4) {
-	copy(matrix.elements[0:], other.elements[0:])
+func (matrix *Matrix4) Copy(source *Matrix4) {
+	copy(matrix.elements[0:], source.elements[0:])
 }
 
 func (matrix *Matrix4) CopyPosition(other *Matrix4) {

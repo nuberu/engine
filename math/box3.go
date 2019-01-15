@@ -55,9 +55,9 @@ func (box *Box3) Clone() *Box3 {
 	}
 }
 
-func (box *Box3) Copy(other *Box3) {
-	box.min.Copy(&other.min)
-	box.max.Copy(&other.max)
+func (box *Box3) Copy(source *Box3) {
+	box.min.Copy(&source.min)
+	box.max.Copy(&source.max)
 }
 
 func (box *Box3) SetFromPoints(points []*Vector3) {

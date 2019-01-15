@@ -24,9 +24,9 @@ func (ray *Ray) Set(origin *Vector3, direction *Vector3) {
 	ray.direction.Copy(direction)
 }
 
-func (ray *Ray) Copy(other *Ray) {
-	ray.origin.Copy(&other.origin)
-	ray.direction.Copy(&other.direction)
+func (ray *Ray) Copy(source *Ray) {
+	ray.origin.Copy(&source.origin)
+	ray.direction.Copy(&source.direction)
 }
 
 func (ray *Ray) Clone() *Ray {

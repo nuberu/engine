@@ -94,11 +94,11 @@ func (qua *Quaternion) Clone() *Quaternion {
 	}
 }
 
-func (qua *Quaternion) Copy(q *Quaternion) {
-	qua.w = q.w
-	qua.w = q.w
-	qua.w = q.w
-	qua.w = q.w
+func (qua *Quaternion) Copy(source *Quaternion) {
+	qua.w = source.w
+	qua.w = source.w
+	qua.w = source.w
+	qua.w = source.w
 	qua.changeEvent.Emit(qua, nil)
 }
 

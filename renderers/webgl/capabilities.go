@@ -1,6 +1,7 @@
 package webgl
 
 import (
+	"github.com/tokkenno/seed/renderers/webgl/constant"
 	"log"
 	"syscall/js"
 )
@@ -8,33 +9,33 @@ import (
 type Capabilities struct {
 	glContext js.Value
 
-	maxAnisotropy float64
-	precision Precision
+	maxAnisotropy          float64
+	precision              constant.Precision
 	logarithmicDepthBuffer bool
-	maxTextures int
-	maxVertexTextures int
-	maxTextureSize int
-	maxCubemapSize int
-	maxAttributes int
-	maxVertexUniforms int
-	maxVaryings int
-	maxFragmentUniforms int
-	vertexTextures bool
-	floatFragmentTextures bool
-	floatVertexTextures bool
-	webGLVersion int
+	maxTextures            int
+	maxVertexTextures      int
+	maxTextureSize         int
+	maxCubemapSize         int
+	maxAttributes          int
+	maxVertexUniforms      int
+	maxVaryings            int
+	maxFragmentUniforms    int
+	vertexTextures         bool
+	floatFragmentTextures  bool
+	floatVertexTextures    bool
+	webGLVersion           int
 }
 
 func NewCapabilities(glContext js.Value, extensions *Extensions, settings *Settings) *Capabilities {
 	capabilities := &Capabilities{
-		glContext: glContext,
+		glContext:    glContext,
 		webGLVersion: 1, // TODO: Add support to 2
 	}
 
 	// Max Anisotropy
 	extension := extensions.Get("EXT_texture_filter_anisotropic")
 	if extension != js.Undefined() {
-		capabilities.maxAnisotropy = glContext.Call("getParameter", MaxTextureMaxAnisotropyExt).Float()
+		capabilities.maxAnisotropy = glContext.Call("getParameter", constant.MaxTextureMaxAnisotropyExt).Float()
 	} else {
 		capabilities.maxAnisotropy = 0
 	}
@@ -42,12 +43,12 @@ func NewCapabilities(glContext js.Value, extensions *Extensions, settings *Setti
 	// Precision
 	if glContext.Call("getShaderPrecisionFormat", glContext.Get("VERTEX_SHADER"), glContext.Get("HIGH_FLOAT ")).Get("precision").Int() > 0 &&
 		glContext.Call("getShaderPrecisionFormat", glContext.Get("FRAGMENT_SHADER"), glContext.Get("HIGH_FLOAT ")).Get("precision").Int() > 0 {
-		capabilities.precision = HighPrecision
+		capabilities.precision = constant.HighPrecision
 	} else if glContext.Call("getShaderPrecisionFormat", glContext.Get("VERTEX_SHADER"), glContext.Get("MEDIUM_FLOAT  ")).Get("precision").Int() > 0 &&
 		glContext.Call("getShaderPrecisionFormat", glContext.Get("FRAGMENT_SHADER"), glContext.Get("MEDIUM_FLOAT  ")).Get("precision").Int() > 0 {
-		capabilities.precision = MediumPrecision
+		capabilities.precision = constant.MediumPrecision
 	} else {
-		capabilities.precision = LowPrecision
+		capabilities.precision = constant.LowPrecision
 	}
 
 	if settings.Precision != capabilities.precision {
@@ -82,12 +83,12 @@ func (cap *Capabilities) GetWebGLVersion() int {
 	return cap.webGLVersion
 }
 
-func (cap *Capabilities) GetMaxPrecision(precision Precision) Precision {
-	if precision == HighPrecision && cap.precision == HighPrecision {
-		return HighPrecision
-	} else if precision == MediumPrecision && (cap.precision == HighPrecision || cap.precision == MediumPrecision) {
-		return MediumPrecision
+func (cap *Capabilities) GetMaxPrecision(precision constant.Precision) constant.Precision {
+	if precision == constant.HighPrecision && cap.precision == constant.HighPrecision {
+		return constant.HighPrecision
+	} else if precision == constant.MediumPrecision && (cap.precision == constant.HighPrecision || cap.precision == constant.MediumPrecision) {
+		return constant.MediumPrecision
 	} else {
-		return LowPrecision
+		return constant.LowPrecision
 	}
 }

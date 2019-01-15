@@ -49,9 +49,9 @@ func (box *Box2) Clone() *Box2 {
 	}
 }
 
-func (box *Box2) Copy(other *Box2) {
-	box.min.Copy(&other.min)
-	box.max.Copy(&other.max)
+func (box *Box2) Copy(source *Box2) {
+	box.min.Copy(&source.min)
+	box.max.Copy(&source.max)
 }
 
 func (box *Box2) IsEmpty() bool {

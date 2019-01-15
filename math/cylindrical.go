@@ -32,10 +32,10 @@ func (cyl *Cylindrical) Clone() *Cylindrical {
 	}
 }
 
-func (cyl *Cylindrical) Copy(other *Cylindrical) {
-	cyl.radius = other.radius
-	cyl.theta = other.theta
-	cyl.y = other.y
+func (cyl *Cylindrical) Copy(source *Cylindrical) {
+	cyl.radius = source.radius
+	cyl.theta = source.theta
+	cyl.y = source.y
 }
 
 func (cyl *Cylindrical) SetFromVector3(vec *Vector3) {

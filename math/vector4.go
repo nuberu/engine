@@ -50,11 +50,11 @@ func (vec *Vector4) Clone() *Vector4 {
 	}
 }
 
-func (vec *Vector4) Copy(vector *Vector4) {
-	vec.X = vector.X
-	vec.Y = vector.Y
-	vec.Z = vector.Z
-	vec.W = vector.W
+func (vec *Vector4) Copy(source *Vector4) {
+	vec.X = source.X
+	vec.Y = source.Y
+	vec.Z = source.Z
+	vec.W = source.W
 }
 
 func (vec *Vector4) Add(vector *Vector4) {

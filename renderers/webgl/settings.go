@@ -1,5 +1,7 @@
 package webgl
 
+import "github.com/tokkenno/seed/renderers/webgl/constant"
+
 type Settings struct {
 	Alpha                  bool
 	Depth                  bool
@@ -8,7 +10,7 @@ type Settings struct {
 	PremultipliedAlpha     bool
 	PreserveDrawingBuffer  bool
 	PowerPreference        string
-	Precision              Precision
+	Precision              constant.Precision
 	LogarithmicDepthBuffer bool
 }
 
@@ -21,7 +23,7 @@ func DefaultSettings() *Settings {
 	settings.PremultipliedAlpha = true
 	settings.PreserveDrawingBuffer = false
 	settings.PowerPreference = "default"
-	settings.Precision = HighPrecision
+	settings.Precision = constant.HighPrecision
 	settings.LogarithmicDepthBuffer = false
 	return settings
 }

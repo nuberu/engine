@@ -66,8 +66,8 @@ func (matrix *Matrix3) Clone() *Matrix3 {
 	return &m
 }
 
-func (matrix *Matrix3) Copy(other *Matrix3) {
-	copy(matrix.elements[0:], other.elements[0:])
+func (matrix *Matrix3) Copy(source *Matrix3) {
+	copy(matrix.elements[0:], source.elements[0:])
 }
 
 func (matrix *Matrix3) Multiply(m *Matrix3) {

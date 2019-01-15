@@ -32,10 +32,10 @@ func (sphere *Spherical) Clone() *Spherical {
 	}
 }
 
-func (sphere *Spherical) Copy(other *Spherical) {
-	sphere.radius = other.radius
-	sphere.phi = other.phi
-	sphere.theta = other.theta
+func (sphere *Spherical) Copy(source *Spherical) {
+	sphere.radius = source.radius
+	sphere.phi = source.phi
+	sphere.theta = source.theta
 }
 
 func (sphere *Spherical) MakeSafe() {

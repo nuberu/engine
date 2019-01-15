@@ -191,11 +191,11 @@ func (eu *Euler) Clone() *Euler {
 	}
 }
 
-func (eu *Euler) Copy(other *Euler) {
-	eu.x = other.x
-	eu.y = other.y
-	eu.z = other.z
-	eu.order = other.order
+func (eu *Euler) Copy(source *Euler) {
+	eu.x = source.x
+	eu.y = source.y
+	eu.z = source.z
+	eu.order = source.order
 	eu.changeEvent.Emit(eu, nil)
 }
 

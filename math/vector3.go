@@ -98,10 +98,10 @@ func (vec *Vector3) SetFromMatrixColumn(m *Matrix4, col int) {
 	vec.Z = m.elements[offset+2]
 }
 
-func (vec *Vector3) Copy(v *Vector3) {
-	vec.X = v.X
-	vec.Y = v.Y
-	vec.Z = v.Z
+func (vec *Vector3) Copy(source *Vector3) {
+	vec.X = source.X
+	vec.Y = source.Y
+	vec.Z = source.Z
 }
 
 func (vec *Vector3) Clone() *Vector3 {
