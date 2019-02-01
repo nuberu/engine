@@ -1,6 +1,6 @@
-package webgl
+package renderer
 
-import "github.com/tokkenno/seed/core"
+import "github.com/nuberu/engine/core"
 
 type Lights struct {
 

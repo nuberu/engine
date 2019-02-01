@@ -1,8 +1,8 @@
 package objects
 
 import (
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/core/render/draw"
+	"github.com/nuberu/engine/core"
+	"github.com/nuberu/engine/core/render/draw"
 )
 
 type meshRaycast struct {

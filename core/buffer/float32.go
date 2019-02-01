@@ -2,7 +2,7 @@ package buffer
 
 import (
 	"errors"
-	"github.com/tokkenno/seed/math"
+	"github.com/nuberu/engine/math"
 )
 
 type Float32 struct {

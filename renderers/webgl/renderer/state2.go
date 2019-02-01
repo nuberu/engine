@@ -1,6 +1,6 @@
-package webgl
+package renderer
 
-import "github.com/tokkenno/seed/renderers/webgl/buffer"
+import "github.com/nuberu/engine/renderers/webgl/buffer"
 
 type State struct {
 	colorBuffer   *buffer.Color

@@ -2,7 +2,7 @@ package gl
 
 import (
 	"github.com/go-gl/gl/v4.1-core/gl"
-	"github.com/tokkenno/seed/core/render"
+	"github.com/nuberu/engine/core/render"
 )
 
 type Renderer struct {

@@ -1,9 +1,9 @@
 package core
 
 import (
-	"github.com/tokkenno/seed/core/constant"
-	"github.com/tokkenno/seed/core/types"
-	"github.com/tokkenno/seed/math"
+	"github.com/nuberu/engine/core/constant"
+	"github.com/nuberu/engine/core/types"
+	"github.com/nuberu/engine/math"
 )
 
 var (

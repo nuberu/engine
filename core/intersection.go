@@ -1,6 +1,6 @@
 package core
 
-import "github.com/tokkenno/seed/math"
+import "github.com/nuberu/engine/math"
 
 type Intersection struct {
 	distance float32 // Distance between the origin of the ray and the intersection

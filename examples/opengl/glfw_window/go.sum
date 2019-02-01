@@ -4,7 +4,7 @@ github.com/go-gl/glfw v0.0.0-20181014061658-691ee1b84c51 h1:elGSwayRx7uAsfA5PnVK
 github.com/go-gl/glfw v0.0.0-20181014061658-691ee1b84c51/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/google/logger v0.0.0-20181112113803-324a7c096a0d h1:1YC9w0bRU6LRB8JEapVhbfB2Iiewl2NsX39p8uxrKbk=
 github.com/google/logger v0.0.0-20181112113803-324a7c096a0d/go.mod h1:tQN+I/DyBt051hEHNEzPgIeyy/GD1WJaKbqPScoDKdY=
-github.com/tokkenno/seed v0.0.0-20181208160937-9dfd3981980b h1:CVDyCwodpNnqHwMifpa/fi/YMnNtMaefCYPScWtTeEU=
-github.com/tokkenno/seed v0.0.0-20181208160937-9dfd3981980b/go.mod h1:et/T3NMKw2Ueh6EUuPUQokRSS9YYS7tw0AAV6XGle7o=
+github.com/nuberu/engine v0.0.0-20181208160937-9dfd3981980b h1:CVDyCwodpNnqHwMifpa/fi/YMnNtMaefCYPScWtTeEU=
+github.com/nuberu/engine v0.0.0-20181208160937-9dfd3981980b/go.mod h1:et/T3NMKw2Ueh6EUuPUQokRSS9YYS7tw0AAV6XGle7o=
 golang.org/x/sys v0.0.0-20181206074257-70b957f3b65e h1:njOxP/wVblhCLIUhjHXf6X+dzTt5OQ3vMQo9mkOIKIo=
 golang.org/x/sys v0.0.0-20181206074257-70b957f3b65e/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=

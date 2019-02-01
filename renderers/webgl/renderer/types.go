@@ -1,4 +1,4 @@
-package webgl
+package renderer
 
 import "syscall/js"
 

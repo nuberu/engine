@@ -1,10 +1,10 @@
 package gl
 
 import (
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/core/constant"
-	"github.com/tokkenno/seed/event"
-	"github.com/tokkenno/seed/math"
+	"github.com/nuberu/engine/core"
+	"github.com/nuberu/engine/core/constant"
+	"github.com/nuberu/engine/event"
+	"github.com/nuberu/engine/math"
 )
 
 // TODO: Meter como texture options y componer las ultimas propiedades

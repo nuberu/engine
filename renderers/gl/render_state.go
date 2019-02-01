@@ -1,8 +1,8 @@
 package gl
 
 import (
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/renderers/gl_common"
+	"github.com/nuberu/engine/core"
+	"github.com/nuberu/engine/renderers/gl_common"
 )
 
 type RenderState struct {

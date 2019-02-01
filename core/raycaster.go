@@ -1,7 +1,7 @@
 package core
 
 import (
-	"github.com/tokkenno/seed/math"
+	"github.com/nuberu/engine/math"
 	nativeMath "math"
 	"sort"
 )

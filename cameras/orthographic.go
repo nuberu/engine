@@ -1,8 +1,8 @@
 package cameras
 
 import (
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/math"
+	"github.com/nuberu/engine/core"
+	"github.com/nuberu/engine/math"
 )
 
 type orthographicView struct {
@@ -127,7 +127,7 @@ func (camera *Orthographic) UpdateProjectionMatrix() {
 }
 
 func (camera *Orthographic) GetRay(coordinates *math.Vector2) *math.Ray {
-	origin := math.NewVector3(coordinates.X, coordinates.Y,( camera.near + camera.far ) / ( camera.near - camera.far ))
+	origin := math.NewVector3(coordinates.X, coordinates.Y, (camera.near+camera.far)/(camera.near-camera.far))
 	core.UnProject(origin, &camera.Camera)
 
 	direction := math.NewVector3(0, 0, -1)

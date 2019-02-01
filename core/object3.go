@@ -1,8 +1,8 @@
 package core
 
 import (
-	"github.com/tokkenno/seed/event"
-	"github.com/tokkenno/seed/math"
+	"github.com/nuberu/engine/event"
+	"github.com/nuberu/engine/math"
 )
 
 const (

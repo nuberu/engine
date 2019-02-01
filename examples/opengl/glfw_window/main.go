@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/go-gl/glfw/v3.2/glfw"
-	"github.com/tokkenno/seed/renderers/gl"
+	"github.com/nuberu/engine/renderers/gl"
 )
 
 var (

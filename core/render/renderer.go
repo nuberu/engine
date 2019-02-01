@@ -1,8 +1,8 @@
 package render
 
 import (
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/math"
+	"github.com/nuberu/engine/core"
+	"github.com/nuberu/engine/math"
 )
 
 type Renderer interface {

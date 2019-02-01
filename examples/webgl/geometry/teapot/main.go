@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/geometries"
-	"github.com/tokkenno/seed/materials"
-	"github.com/tokkenno/seed/objects"
-	"github.com/tokkenno/seed/renderers/webgl/renderer"
+	"github.com/nuberu/engine/core"
+	"github.com/nuberu/engine/geometries"
+	"github.com/nuberu/engine/materials"
+	"github.com/nuberu/engine/objects"
+	"github.com/nuberu/engine/renderers/webgl/renderer"
 	"syscall/js"
 )
 

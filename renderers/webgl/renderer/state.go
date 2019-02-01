@@ -1,8 +1,8 @@
 package renderer
 
 import (
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/renderers/webgl"
+	"github.com/nuberu/engine/core"
+	"github.com/nuberu/engine/renderers/webgl"
 )
 
 type State struct {

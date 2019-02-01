@@ -1,20 +1,22 @@
 package buffer
 
 import (
-	coreConstant "github.com/tokkenno/seed/core/constant"
-	"github.com/tokkenno/seed/renderers/webgl/constant"
-	"github.com/tokkenno/seed/renderers/webgl/js"
+	coreConstant "github.com/nuberu/engine/core/constant"
+	"github.com/nuberu/engine/renderers/webgl/constant"
+	"github.com/nuberu/engine/renderers/webgl/js"
+	"github.com/nuberu/webgl"
+	"github.com/nuberu/webgl/types"
 )
 
 type Stencil struct {
-	glContext               *js.WebGLRenderingContext
+	glContext               *webgl.RenderingContext
 	locked                  bool
 	currentStencilMaskInit  bool
-	currentStencilMask      uint
+	currentStencilMask      uint32
 	currentStencilFuncInit  bool
 	currentStencilFunc      coreConstant.Condition
 	currentStencilRef       int
-	currentStencilFuncMask  uint
+	currentStencilFuncMask  uint32
 	currentStencilOpInit    bool
 	currentStencilFail      constant.StencilFunc
 	currentStencilZFail     constant.StencilFunc
@@ -23,7 +25,7 @@ type Stencil struct {
 	currentStencilClear     int
 }
 
-func NewStencilBuffer(glContext *js.WebGLRenderingContext) *Stencil {
+func NewStencilBuffer(glContext *webgl.RenderingContext) *Stencil {
 	return &Stencil{
 		glContext:               glContext,
 		locked:                  false,
@@ -34,7 +36,7 @@ func NewStencilBuffer(glContext *js.WebGLRenderingContext) *Stencil {
 	}
 }
 
-func (ste *Stencil) SetMask(stencilMask uint) {
+func (ste *Stencil) SetMask(stencilMask uint32) {
 	if (!ste.currentStencilMaskInit || ste.currentStencilMask != stencilMask) && !ste.locked {
 		ste.currentStencilMaskInit = true
 		ste.glContext.StencilMask(stencilMask)
@@ -42,10 +44,10 @@ func (ste *Stencil) SetMask(stencilMask uint) {
 	}
 }
 
-func (ste *Stencil) SetFunc(stencilFunc coreConstant.Condition, stencilRef int, stencilMask uint) {
+func (ste *Stencil) SetFunc(stencilFunc coreConstant.Condition, stencilRef int, stencilMask uint32) {
 	if !ste.currentStencilFuncInit || ste.currentStencilFunc != stencilFunc || ste.currentStencilRef != stencilRef || ste.currentStencilFuncMask != stencilMask {
 		ste.currentStencilFuncInit = true
-		ste.glContext.StencilFunc(stencilFunc, stencilRef, stencilMask)
+		ste.glContext.StencilFunc(types.GLEnum(uint32(stencilFunc) + uint32(webgl.NEVER)), stencilRef, stencilMask)
 		ste.currentStencilFunc = stencilFunc
 		ste.currentStencilRef = stencilRef
 		ste.currentStencilFuncMask = stencilMask

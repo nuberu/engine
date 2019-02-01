@@ -1,6 +1,6 @@
 package renderer
 
-import "github.com/tokkenno/seed/core"
+import "github.com/nuberu/engine/core"
 
 type States struct {
 	list map[core.Id]map[core.Id]*State

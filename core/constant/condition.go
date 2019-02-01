@@ -1,14 +1,14 @@
 package constant
 
-type Condition uint8
+type Condition uint32
 
 const (
-	Never        Condition = 1
-	Always       Condition = 2
-	Less         Condition = 3
-	LessEqual    Condition = 4
-	Equal        Condition = 5
+	Never        Condition = 0
+	Less         Condition = 1
+	Equal        Condition = 2
+	LessEqual    Condition = 3
+	Greater      Condition = 4
+	NotEqual     Condition = 5
 	GreaterEqual Condition = 6
-	Greater      Condition = 7
-	NotEqual     Condition = 8
+	Always       Condition = 7
 )

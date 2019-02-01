@@ -1,8 +1,8 @@
 package gl_common
 
 import (
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/math"
+	"github.com/nuberu/engine/core"
+	"github.com/nuberu/engine/math"
 )
 
 type Nosequemierdaesesto struct {

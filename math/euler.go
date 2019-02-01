@@ -1,7 +1,7 @@
 package math
 
 import (
-	"github.com/tokkenno/seed/event"
+	"github.com/nuberu/engine/event"
 )
 
 type EulerOrder int

@@ -1,7 +1,7 @@
 package gl
 
 import (
-	"github.com/tokkenno/seed/core"
+	"github.com/nuberu/engine/core"
 )
 
 type RenderStates struct {

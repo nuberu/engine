@@ -1,19 +1,19 @@
 package buffer
 
 import (
-	"github.com/tokkenno/seed/math"
-	"github.com/tokkenno/seed/renderers/webgl/js"
+	"github.com/nuberu/engine/math"
+	"github.com/nuberu/webgl"
 )
 
 type Color struct {
-	glContext         *js.WebGLRenderingContext
+	glContext         *webgl.RenderingContext
 	locked            bool
 	color             *math.Vector4
 	currentColorMask  *math.Vector4
 	currentColorClear *math.Vector4
 }
 
-func NewColorBuffer(glContext *js.WebGLRenderingContext) *Color {
+func NewColorBuffer(glContext *webgl.RenderingContext) *Color {
 	return &Color{
 		glContext:         glContext,
 		locked:            false,

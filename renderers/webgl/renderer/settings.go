@@ -1,6 +1,6 @@
-package webgl
+package renderer
 
-import "github.com/tokkenno/seed/renderers/webgl/constant"
+import "github.com/nuberu/engine/renderers/webgl/constant"
 
 type Settings struct {
 	Alpha                  bool

@@ -1,13 +1,14 @@
 package renderer
 
 import (
+	gl "github.com/nuberu/webgl"
 	"errors"
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/core/constant"
-	"github.com/tokkenno/seed/core/render"
-	"github.com/tokkenno/seed/math"
-	"github.com/tokkenno/seed/renderers/webgl"
-	"github.com/tokkenno/seed/renderers/webgl/program"
+	"github.com/nuberu/engine/core"
+	"github.com/nuberu/engine/core/constant"
+	"github.com/nuberu/engine/core/render"
+	"github.com/nuberu/engine/math"
+	"github.com/nuberu/engine/renderers/webgl"
+	"github.com/nuberu/engine/renderers/webgl/program"
 	"syscall/js"
 )
 
@@ -80,7 +81,7 @@ type Renderer struct {
 	extensions *webgl.Extensions
 	capabilities *webgl.Capabilities
 
-	glContext          js.Value
+	glContext          *gl.RenderingContext
 	onContextLostJs    js.Callback
 	onContextRestoreJs js.Callback
 }
@@ -140,13 +141,11 @@ func NewRenderer(settings *webgl.Settings) (*Renderer, error) {
 	canvas.Call("addEventListener", "webglcontextlost", renderer.onContextLostJs, false)
 	canvas.Call("addEventListener", "webglcontextrestored", renderer.onContextRestoreJs, false)
 
-	renderer.glContext = canvas.Call("getContext", "webgl")
-	if renderer.glContext == js.Undefined() {
-		renderer.glContext = canvas.Call("getContext", "experimental-webgl")
+	context, err := gl.FromCanvas(canvas)
+	if err != nil {
+		return nil, err
 	}
-	if renderer.glContext == js.Undefined() {
-		return nil, errors.New("WebGL context can't be created. Maybe the browser don't support then")
-	}
+	renderer.glContext = context
 
 	// InitGLContext
 	renderer.extensions = webgl.NewExtensions(renderer.glContext)

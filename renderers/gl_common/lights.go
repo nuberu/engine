@@ -1,10 +1,10 @@
 package gl_common
 
 import (
-	"github.com/tokkenno/seed/core"
+	"github.com/nuberu/engine/core"
 	"reflect"
-	"github.com/tokkenno/seed/lights"
-	"github.com/tokkenno/seed/math"
+	"github.com/nuberu/engine/lights"
+	"github.com/nuberu/engine/math"
 )
 
 type Uniform struct {

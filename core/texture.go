@@ -1,8 +1,8 @@
 package core
 
 import (
-	"github.com/tokkenno/seed/core/constant"
-	"github.com/tokkenno/seed/textures"
+	"github.com/nuberu/engine/core/constant"
+	"github.com/nuberu/engine/textures"
 )
 
 type TextureOptions struct {

@@ -1,7 +1,7 @@
-package webgl
+package renderer
 
 import (
-	"github.com/tokkenno/seed/renderers/webgl/constant"
+	"github.com/nuberu/engine/renderers/webgl/constant"
 	"log"
 	"syscall/js"
 )

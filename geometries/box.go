@@ -1,10 +1,10 @@
 package geometries
 
 import (
-	"github.com/tokkenno/seed/core"
-	"github.com/tokkenno/seed/core/buffer"
-	"github.com/tokkenno/seed/core/constant"
-	"github.com/tokkenno/seed/math"
+	"github.com/nuberu/engine/core"
+	"github.com/nuberu/engine/core/buffer"
+	"github.com/nuberu/engine/core/constant"
+	"github.com/nuberu/engine/math"
 )
 
 type Box struct {
